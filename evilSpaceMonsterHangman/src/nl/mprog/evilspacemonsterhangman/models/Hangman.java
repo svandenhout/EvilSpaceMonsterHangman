@@ -5,6 +5,10 @@ import java.util.Random;
 
 /**
  * The hangman class covers all of the aspects to actually play the game of hangman,
+ * the constructor needs the values of the wordlength & the amount of turns the player has.
+ * 
+ * Use the setWordList() method to make a 
+ * 
  *
  * Created by steven on 5/28/13.
  */

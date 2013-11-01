@@ -9,6 +9,9 @@ import java.util.List;
 
 /**
  * Created by steven on 6/20/13.
+ * 
+ * Constructs a wordList from an SQLiteDatabase file, the arguments are the database and
+ * the wordlength. the getWordList() method returns the wordlist.
  */
 public class WordList {
     private final static String TAG = "WordList";
@@ -18,15 +21,16 @@ public class WordList {
     private List<String> wordList = new ArrayList<String>();
     private SQLiteDatabase db;
     
-    public WordList(SQLiteDatabase db) {
+    public WordList(SQLiteDatabase db, int wordLength) {
         this.db = db;
+        this.buildListByWordLength(wordLength);
     }
 
     public List<String> getWordList() {
         return wordList;
     }
 
-    public void buildListByWordLength(int wordLength) {
+    private void buildListByWordLength(int wordLength) {
         String _line;
         Cursor _result;
         

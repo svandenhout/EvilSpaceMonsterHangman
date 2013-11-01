@@ -31,7 +31,7 @@ public class WordListTest extends InstrumentationTestCase {
 	        DatabaseHelper _dbHelper = new DatabaseHelper(context);
 	        _dbHelper.createDatabase();
 	        SQLiteDatabase _db = _dbHelper.getDatabase();
-	        wl = new WordList(_db);
+	        wl = new WordList(_db, 5);
         }catch(SQLiteException e) {
         	e.printStackTrace();
         }
@@ -39,10 +39,8 @@ public class WordListTest extends InstrumentationTestCase {
 
     /* tests if all of the words in the array have the specified wordLength */
     protected void runTest() throws Throwable {
-        wl.buildListByWordLength(5);
         stringList = wl.getWordList();
         assertNotNull(stringList);
-        
         
         for(String word : stringList) {
             if(word.length() != 5) {

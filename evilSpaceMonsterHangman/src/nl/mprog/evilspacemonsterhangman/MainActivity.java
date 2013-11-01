@@ -20,9 +20,8 @@ public class MainActivity extends Activity {
 
         // set sqlite database
         db = new DatabaseHelper(this).getReadableDatabase();
-        WordList wl = new WordList(db);
+        WordList wl = new WordList(db, 5);
 
-        wl.buildListByWordLength(5);
         List<String> wordList = wl.getWordList();
         Log.d("WORDLIST", wordList.get(0));
     }
