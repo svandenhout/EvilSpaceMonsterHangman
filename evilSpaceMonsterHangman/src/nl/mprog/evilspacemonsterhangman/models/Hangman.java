@@ -24,17 +24,17 @@ public class Hangman {
     public final int GAME_LOST = 5;
     public final int INPUT_ERROR = 6;
     
-    private static final int MIN_UNICODE_INDEX = 96;
-    private static final int MAX_UNICODE_INDEX = 123;
+    protected static final int MIN_UNICODE_INDEX = 96;
+    protected static final int MAX_UNICODE_INDEX = 123;
 
-    private int wordLength;
-    private int wrongGuesses;
-    private int wrongGuessesDone;
+    protected int wordLength;
+    protected int wrongGuesses;
+    protected int wrongGuessesDone;
 
-    private List<String> wordList;
-    private String currentWord;
-    private String currentWordState;
-    private String usedLetters;
+    protected List<String> wordList;
+    protected String currentWord;
+    protected String currentWordState;
+    protected String usedLetters;
 
     /*
      * the constructor takes all of the game settings as arguments
@@ -86,7 +86,9 @@ public class Hangman {
         this.currentWordState = s.toString();
     }
 
-    // primarily for testing purposes 
+    /*
+     * Primarily for testing purposes
+     */
     public void setCurrentWord(String word) {
     	if(word != null) {
     		this.currentWord = word;
@@ -129,7 +131,8 @@ public class Hangman {
         }else {
         	return ALREADY_USED;
         }
-    
+        
+        // make a character array from the currentWordState string
         char[] ca = this.currentWordState.toCharArray();
         int i = 0;
         while(true) {

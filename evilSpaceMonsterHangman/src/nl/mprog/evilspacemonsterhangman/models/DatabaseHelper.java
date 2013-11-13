@@ -24,7 +24,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "databasehelper";
     private static final String DB_NAME = "hangmanwords.db";
-    // private static final String DB_PATH = "/data/data/nl.mprog.evelstpacemonsterhangman/databases/";
     private String dbPath;
     private final Context fContext;
     private SQLiteDatabase myDataBase;

@@ -2,7 +2,7 @@ package nl.mprog.evilspacemonsterhangman.models;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+// import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  * the wordlength. the getWordList() method returns the wordlist.
  */
 public class WordList {
-    private final static String TAG = "WordList";
+    // private final static String TAG = "WordList";
     private final static String DB_TABLE = "wordlist";
     private final static String[] DB_COLLUMN = {"words"};
     
