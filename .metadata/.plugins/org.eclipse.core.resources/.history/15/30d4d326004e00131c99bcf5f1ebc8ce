@@ -1,0 +1,27 @@
+package nl.mprog.evilspacemonsterhangman.models;
+
+public class EquivClass {
+	/*
+	 * class to count number of equal strings
+	 */
+	private int counter;
+	private String currentWord;
+	
+	// constructor
+	EquivClass(String equivWord) {
+		this.currentWord = equivWord;
+		this.counter = 0;
+	}
+	
+	public int count() {
+		return this.counter;
+	}
+	
+	public void checkWord(String equivWord) {
+		if(equivWord)
+	}
+	
+	private void increment() {
+		this.counter++;
+	}
+}

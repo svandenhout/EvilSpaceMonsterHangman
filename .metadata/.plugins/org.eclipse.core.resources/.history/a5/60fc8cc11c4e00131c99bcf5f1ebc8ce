@@ -1,0 +1,38 @@
+package nl.mprog.evilspacemonsterhangman.test;
+
+import java.util.List;
+
+import android.test.InstrumentationTestCase;
+import nl.mprog.evilspacemonsterhangman.models.*;
+
+/**
+ * Created by steven on 6/26/13.
+ * 
+ * tests the equivclass, a simple class that counts the amount of 
+ * equal strings given
+ * built for use with an ArrayList
+ */
+public class EquivClassTest extends InstrumentationTestCase {
+	private List<EquivClass> equivClassList;
+	
+    public EquivClassTest(String name) {
+        super();
+        setName(name);
+    }
+
+    protected void setUp() {
+        getInstrumentation();
+        equivClassList = new ArrayList<EquivClass>(); 
+    }
+
+    protected void runTest() {
+    	
+    	if(gameState != hangman.INVALID_INPUT) {
+    		fail(letter + " should return invalid input, returned " + gameState);
+    	}
+    }
+
+    public void testInstrumentation() {
+
+    }
+}

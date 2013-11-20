@@ -1,0 +1,39 @@
+package nl.mprog.evilspacemonsterhangman.test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import android.test.InstrumentationTestCase;
+import nl.mprog.evilspacemonsterhangman.models.*;
+
+/**
+ * Created by steven on 6/26/13.
+ */
+public class BuildEquivalenceStringTest extends InstrumentationTestCase {
+	private Hangman hangman;
+	
+    public BuildEquivalenceStringTest(String name) {
+        super();
+        setName(name);
+    }
+
+    protected void setUp() {
+        getInstrumentation();
+        List<String> wordList = new ArrayList<String>();
+        wordList.add(0, "AAAAA");
+        wordList.add(1, "ACCCA");
+        wordList.add(2, "KAKAA");
+        hangman = new EvilHangman(5, 8);
+        hangman.setWordList(wordList);
+    }
+
+    protected void runTest() {
+    	int key = (int) 'A';
+    	
+    	for(String word: wordList)
+    }
+
+    public void testInstrumentation() {
+
+    }
+}
