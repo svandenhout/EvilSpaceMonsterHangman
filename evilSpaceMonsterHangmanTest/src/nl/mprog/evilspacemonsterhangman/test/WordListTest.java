@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.test.InstrumentationTestCase;
-import android.util.Log;
 
 import java.util.List;
 
@@ -15,7 +14,6 @@ import nl.mprog.evilspacemonsterhangman.models.WordList;
  * Created by steven on 6/25/13.	
  */
 public class WordListTest extends InstrumentationTestCase {
-    private final static String TAG = "WordListTest";
     private WordList wl;
     private List<String> stringList;
 

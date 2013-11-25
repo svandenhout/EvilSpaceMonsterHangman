@@ -12,6 +12,12 @@ import nl.mprog.evilspacemonsterhangman.models.*;
 public class EvilBusinessTest extends InstrumentationTestCase {
 	private EvilHangman evilHangman;
 	List<String> wordList;
+	List<String> wordList2;
+	
+	/*
+	 * ask question about setWordList(), since it
+	 * is not able to change the wordList once inserted
+	 */
     public EvilBusinessTest(String name) {
         super();
         setName(name);
@@ -20,21 +26,39 @@ public class EvilBusinessTest extends InstrumentationTestCase {
     protected void setUp() {
         getInstrumentation();
         wordList = new ArrayList<String>();
-        wordList.add(0, "jaaho");
+        wordList.add(0, "pompe");
         wordList.add(1, "baase");
         wordList.add(2, "mande");
-        wordList.add(3, "pteii");
-        wordList.add(4, "pompe");
-        wordList.add(4, "saass");
+        wordList.add(3, "saass");
+        wordList.add(4, "jaaho");
+        wordList.add(5, "pteii");
+        
+        wordList2 = new ArrayList<String>();
+        wordList2.add(0, "pompe");
+        wordList2.add(1, "baase");
+        wordList2.add(2, "mande");
+        wordList2.add(3, "saass");
+        wordList2.add(4, "jaaho");
+        wordList2.add(5, "pteii");
+        wordList2.add(6, "bbbbb");
+
         evilHangman = new EvilHangman(5, 8);
         evilHangman.setWordList(wordList);
     }
 
     protected void runTest() {
     	int key = (int) 'a';
-    	evilHangman.setWordList(wordList);
+    	// test for the highest number of "equivilance strings to come out"
+//    	evilHangman.setWordList(wordList);
+//    	evilHangman.evilBusiness(key);
+//    	assertEquals("_aa__", evilHangman.getCurrentWordState());
+    	
+    	// here there are just as many "_aa__" as there are "_____"
+    	// the algorithm should return "_____" because it has the least usable
+    	// letters
+    	evilHangman.setWordList(wordList2);
     	evilHangman.evilBusiness(key);
-    	assertEquals("_aa__", evilHangman.getCurrentWordState());
+    	assertEquals("_____", evilHangman.getCurrentWordState());
     }
 
     public void testInstrumentation() {

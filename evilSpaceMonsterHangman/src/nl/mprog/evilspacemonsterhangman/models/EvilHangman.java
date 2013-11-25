@@ -1,13 +1,17 @@
 package nl.mprog.evilspacemonsterhangman.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /*
- * builds a 2d array out of the currentWordList
+ * the class initiates an instance of the hangman game
+ * the purpose of evilHangman is to make the system as evil as possible
+ * the doEvilUserInput(int key) method will change the currentWordState
+ * to the least usable value. There is no word, the system just cheats by
+ * giving the currentWordState that has the most amount of possible words.
  */
 public class EvilHangman extends Hangman {
-	
 	
     public EvilHangman(int wordLength, int wrongGuesses) {
 		super(wordLength, wrongGuesses);
@@ -32,24 +36,18 @@ public class EvilHangman extends Hangman {
 	}
 	
 	/*
-	 * TODO: build this method
-	 * build arrayList of possible answers
-	 * ____
-	 * _E__
-	 * _EE_
-	 * E_E_
-	 * 
-	 * build an equivilance class array and count the doubles
+	 * evilBusiness makes sure that this.currentWordState becomes the
+	 * least usefull answer possible.
 	 */
 	public void evilBusiness(int key) {
 		List<EqualStringCount> equivList = new ArrayList<EqualStringCount>();
 		String equivString;
 		
 		// to make sure the equalstringcount has a value (java...)
-		equivString = this.buildEquivalenceString(wordList.get(0), key);
+		equivString = this.buildEquivalenceString(super.wordList.get(0), key);
 		EqualStringCount topEsc = new EqualStringCount(equivString);
         // for every word in the wordlist check for the letter
-	    for(String word : wordList) {
+	    for(String word : super.wordList) {
 	    	equivString = this.buildEquivalenceString(word, key);
 	    	if(equivList.size() > 0) {
 	    		// loop through the equivList to check for equalStrings
@@ -68,14 +66,38 @@ public class EvilHangman extends Hangman {
 	    	}
     	}
 	    
-	    // return the best solution 
-	    // the highest equivList.count() is probably the best solution
+	    // sort the arrayList from most common to least common
+	    // array
+	    Collections.sort(equivList, new EqualStringCount());
+	    
+	    // the first element in the equivList is always one of
+	    // the most common Strings
+	    topEsc = equivList.get(0);
+	    
+	    // in case of a tie it will find the least actual letters
+	    // by finding the word with the most '_' in it
+	    int hiCount = 0;
 	    for(EqualStringCount esc : equivList) {
-	    	if(esc.count() > topEsc.count()) {
-	    		topEsc = esc;
+	    	// only if the esc is equal to the highest one
+	    	if(esc.count() == topEsc.count()) {
+	    		char[] ca = esc.getString().toCharArray();
+	    		
+	    		int count = 0;
+	    		
+	    		// loop through the char array to count the '_'
+	    		for(char c : ca) {
+	    			if(c == '_')
+	    				count++;
+	    		}
+	    			    		
+	    		// change the currentwordstate to the "equivilanceString" with 
+	    		// the least letters
+	    		if(count > hiCount) 
+	    			super.currentWordState = esc.getString();
+	    		
+    			hiCount = count;
 	    	}
-	    } 
-	    super.currentWordState = topEsc.getString();
+	    }
 	}
 	
 	/*
