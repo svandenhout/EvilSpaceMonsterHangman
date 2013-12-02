@@ -10,9 +10,11 @@ public class SpaceMonster {
 	private Random generator = new Random();
 	private char[] _chosenLetters;
     private List<Character> availableLetters;
+    private String _usedLetters;
 	
 	// constructor 
-	public SpaceMonster() {
+	public SpaceMonster(String usedLetters) {
+		_usedletters = usedLetters;
 		_chosenLetters = new char[monsterSize];
 	}
 	
@@ -22,7 +24,7 @@ public class SpaceMonster {
 	// exchange every loop
 	
 	// dus ArrayList<int> availableLetters
-	public void randomArray(String usedLetters) {
+	public void randomArray() {
 		char[] ca;
 		ca = usedLetters.toCharArray();
 		for(char c : _chosenLetters) {
@@ -38,18 +40,11 @@ public class SpaceMonster {
 		_chosenLetters[generator.nextInt(5)] = c;
 	}
 	
-	// builds an available letters array, it excludes the usedLetters String
-	private List<Character> buildAvailableLetters(String usedLetters) {
-		char[] ca = usedLetters.toCharArray();
+	private List<Character> buildAvailableLetters() {
 		
 		availableLetters = new ArrayList<Character>();
 		// build list with the alphabet
 		for(int i = 97; i < 123; i++) {
-			for(char c : ca) {
-				if(c != (char) i) {
-					// geen idee..??? hoe dit uit gaat komen
-				}
-			}
 			availableLetters.add((char) i);
 		}
 		

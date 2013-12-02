@@ -47,7 +47,7 @@ public class SpaceMonster {
 		for(int i = 97; i < 123; i++) {
 			for(char c : ca) {
 				if(c != (char) i) {
-					// geen idee..??? hoe dit uit gaat komen
+					// geen idee..???
 				}
 			}
 			availableLetters.add((char) i);

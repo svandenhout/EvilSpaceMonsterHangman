@@ -38,18 +38,9 @@ public class SpaceMonster {
 		_chosenLetters[generator.nextInt(5)] = c;
 	}
 	
-	// builds an available letters array, it excludes the usedLetters String
-	private List<Character> buildAvailableLetters(String usedLetters) {
-		char[] ca = usedLetters.toCharArray();
-		
+	private List<Character> buildAvailableLetters() {
 		availableLetters = new ArrayList<Character>();
-		// build list with the alphabet
 		for(int i = 97; i < 123; i++) {
-			for(char c : ca) {
-				if(c != (char) i) {
-					// geen idee..??? hoe dit uit gaat komen
-				}
-			}
 			availableLetters.add((char) i);
 		}
 		
