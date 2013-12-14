@@ -48,10 +48,15 @@ public class EvilBusinessTest extends InstrumentationTestCase {
 
     protected void runTest() {
     	int key = (int) 'a';
+    	/*
+    	 * it's acually impossible to use setWordList twice on an
+    	 * instantiated object (i should ask why..)
+    	 */
+    	
     	// test for the highest number of "equivilance strings to come out"
-//    	evilHangman.setWordList(wordList);
-//    	evilHangman.evilBusiness(key);
-//    	assertEquals("_aa__", evilHangman.getCurrentWordState());
+    	evilHangman.setWordList(wordList);
+    	evilHangman.evilBusiness(key);
+    	assertEquals("_aa__", evilHangman.getCurrentWordState());
     	
     	// here there are just as many "_aa__" as there are "_____"
     	// the algorithm should return "_____" because it has the least usable

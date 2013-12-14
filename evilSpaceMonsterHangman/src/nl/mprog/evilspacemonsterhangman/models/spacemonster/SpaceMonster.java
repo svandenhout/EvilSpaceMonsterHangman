@@ -1,58 +1,64 @@
 package nl.mprog.evilspacemonsterhangman.models.spacemonster;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.List;
+import java.util.Set;
 
+/*
+ * Class makes a char[] for the spacemonster to use as his eyes
+ * (the spacemonster has letters for eyes....)
+ */
 public class SpaceMonster {
 	private final static int monsterSize = 6;
 	
 	private Random generator = new Random();
 	private char[] _chosenLetters;
-    private List<Character> availableLetters;
+    private Set<Character> _availableLetters;
 	
 	// constructor 
 	public SpaceMonster() {
+		initSet();
 		_chosenLetters = new char[monsterSize];
 	}
 	
-	// random the _chosenletters
-	// TODO: make sure there are no equal letters and used letters are not displayed
-	// split into 2 char[], an allready used and a usable char list. these will
-	// exchange every loop
-	
-	// dus ArrayList<int> availableLetters
-	public void randomArray(String usedLetters) {
-		char[] ca;
-		ca = usedLetters.toCharArray();
-		for(char c : _chosenLetters) {
-			int i = generator.nextInt(availableLetters.size());
-			c = availableLetters.get(i);
-			availableLetters.remove(i);
-		}
-	}
-	
-	
 	// adds a char to a random spot of the _chosenletters[char]
-	public void addLetter(char c) {
+	public void addLetterAtRandom(char c) {
 		_chosenLetters[generator.nextInt(5)] = c;
 	}
 	
-	// builds an available letters array, it excludes the usedLetters String
-	private List<Character> buildAvailableLetters(String usedLetters) {
-		char[] ca = usedLetters.toCharArray();
-		
-		availableLetters = new ArrayList<Character>();
+	// removeUsedLetter() is used so the spacemonster won't 
+	// be getting any letters that are already used by the player.
+	public void removeUsedLetter(char c) {
+		_availableLetters.remove(c);
+	}
+	
+	// builds a set with the alphabet in it
+	private void initSet() {
+		_availableLetters = new HashSet<Character>();
 		// build list with the alphabet
 		for(int i = 97; i < 123; i++) {
-			for(char c : ca) {
-				if(c != (char) i) {
-					// geen idee..??? hoe dit uit gaat komen
-				}
-			}
-			availableLetters.add((char) i);
+			_availableLetters.add((char) i);
+		}
+	}
+	
+	// random the _chosenletters for the spacemonster eyes
+	public char[] randomChosenLetters(String usedLetters) {
+		
+		// build a list called workset (I can has shuffle Lists)
+		List<Character> workSet = new ArrayList<Character>(_availableLetters);
+		
+		for(char c : _chosenLetters) {
+			Collections.shuffle(workSet);
+			
+			// get & remove 0 because the set is shuffled afterwards
+			// I use shuffle because i think it's a hilarious language feature
+			c = workSet.get(0);
+			workSet.remove(0);
 		}
 		
-		return availableLetters;
+		return _chosenLetters;
 	}
 }

@@ -7,4 +7,5 @@
 <fullyQualifiedTypeName name="nl.mprog.evilspacemonsterhangman.models.EqualStringCount"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.util.Set"/>
 </qualifiedTypeNameHistroy>
