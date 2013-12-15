@@ -1,0 +1,59 @@
+package nl.mprog.evilspacemonsterhangman;
+
+import nl.mprog.evilspacemonsterhangman.models.*;
+
+import android.content.Context;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.app.Activity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import java.util.List;
+
+public class MainActivity extends Activity {
+    private SQLiteDatabase db;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // set sqlite database
+        db = new DatabaseHelper(this).getReadableDatabase();
+        WordList wl = new WordList(db, 5);
+
+        List<String> wordList = wl.getWordList();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final Context context = this;
+
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.hiScores:
+                Intent startHiScore = new Intent(context, HiScoreActivity.class);
+                startActivity(startHiScore);
+                return true;
+            case R.id.settings:
+                Intent startPreferences = new Intent(context, PreferencesActivity.class);
+                startActivityForResult(startPreferences, 0);
+                return true;
+            case R.id.reset:
+                setupGame();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+}

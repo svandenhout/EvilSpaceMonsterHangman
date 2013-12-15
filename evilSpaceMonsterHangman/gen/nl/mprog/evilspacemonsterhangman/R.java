@@ -9,6 +9,38 @@ package nl.mprog.evilspacemonsterhangman;
 
 public final class R {
     public static final class attr {
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int maximumValue=0x7f010000;
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int minimumValue=0x7f010001;
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int stepSize=0x7f010002;
+        /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int units=0x7f010003;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -24,18 +56,61 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f090000;
+        public static final int computerDialogue=0x7f090001;
+        public static final int currentWord=0x7f090002;
+        public static final int currentWordState=0x7f090003;
+        public static final int hiScores=0x7f090006;
+        public static final int reset=0x7f090008;
+        public static final int seekbar=0x7f090005;
+        public static final int settings=0x7f090007;
+        public static final int usedLetters=0x7f090000;
+        public static final int valueText=0x7f090004;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
+        public static final int activity_preferences=0x7f030001;
     }
     public static final class menu {
         public static final int main=0x7f080000;
     }
     public static final class string {
-        public static final int action_settings=0x7f060001;
         public static final int app_name=0x7f060000;
-        public static final int hello_world=0x7f060002;
+        public static final int cmonologue_correct=0x7f06001a;
+        public static final int cmonologue_invalid=0x7f060018;
+        public static final int cmonologue_lost=0x7f06001c;
+        /**  computer monologue 
+         */
+        public static final int cmonologue_start=0x7f060016;
+        public static final int cmonologue_used=0x7f060017;
+        public static final int cmonologue_won=0x7f06001b;
+        public static final int cmonologue_wrong=0x7f060019;
+        public static final int computer_dialogue=0x7f060013;
+        /**  game ui 
+         */
+        public static final int current_word=0x7f060010;
+        public static final int current_word_state=0x7f060011;
+        public static final int dialog_amount_of_turns=0x7f06000e;
+        public static final int dialog_evil_mode=0x7f06000f;
+        public static final int dialog_user_name=0x7f06000c;
+        public static final int dialog_word_length=0x7f06000d;
+        public static final int game_lost=0x7f060015;
+        /**  game states 
+         */
+        public static final int game_won=0x7f060014;
+        /**  settings & preferences 
+         */
+        public static final int hi_scores=0x7f060001;
+        public static final int reset=0x7f060003;
+        public static final int settings=0x7f060002;
+        public static final int summary_amount_of_turns=0x7f06000a;
+        public static final int summary_evil_mode=0x7f06000b;
+        public static final int summary_user_name=0x7f060008;
+        public static final int summary_word_length=0x7f060009;
+        public static final int title_amount_of_turns=0x7f060006;
+        public static final int title_evil_mode=0x7f060007;
+        public static final int title_user_name=0x7f060004;
+        public static final int title_word_length=0x7f060005;
+        public static final int used_letters=0x7f060012;
     }
     public static final class style {
         /** 
@@ -66,6 +141,83 @@ public final class R {
         public static final int AppTheme=0x7f070001;
     }
     public static final class xml {
-        public static final int words=0x7f040000;
+        public static final int preferences=0x7f040000;
     }
+    public static final class styleable {
+        /** Attributes that can be used with a SeekBarDialogPreference.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #SeekBarDialogPreference_maximumValue nl.mprog.evilspacemonsterhangman:maximumValue}</code></td><td></td></tr>
+           <tr><td><code>{@link #SeekBarDialogPreference_minimumValue nl.mprog.evilspacemonsterhangman:minimumValue}</code></td><td></td></tr>
+           <tr><td><code>{@link #SeekBarDialogPreference_stepSize nl.mprog.evilspacemonsterhangman:stepSize}</code></td><td></td></tr>
+           <tr><td><code>{@link #SeekBarDialogPreference_units nl.mprog.evilspacemonsterhangman:units}</code></td><td></td></tr>
+           </table>
+           @see #SeekBarDialogPreference_maximumValue
+           @see #SeekBarDialogPreference_minimumValue
+           @see #SeekBarDialogPreference_stepSize
+           @see #SeekBarDialogPreference_units
+         */
+        public static final int[] SeekBarDialogPreference = {
+            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003
+        };
+        /**
+          <p>This symbol is the offset where the {@link nl.mprog.evilspacemonsterhangman.R.attr#maximumValue}
+          attribute's value can be found in the {@link #SeekBarDialogPreference} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.mprog.evilspacemonsterhangman:maximumValue
+        */
+        public static final int SeekBarDialogPreference_maximumValue = 0;
+        /**
+          <p>This symbol is the offset where the {@link nl.mprog.evilspacemonsterhangman.R.attr#minimumValue}
+          attribute's value can be found in the {@link #SeekBarDialogPreference} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.mprog.evilspacemonsterhangman:minimumValue
+        */
+        public static final int SeekBarDialogPreference_minimumValue = 1;
+        /**
+          <p>This symbol is the offset where the {@link nl.mprog.evilspacemonsterhangman.R.attr#stepSize}
+          attribute's value can be found in the {@link #SeekBarDialogPreference} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.mprog.evilspacemonsterhangman:stepSize
+        */
+        public static final int SeekBarDialogPreference_stepSize = 2;
+        /**
+          <p>This symbol is the offset where the {@link nl.mprog.evilspacemonsterhangman.R.attr#units}
+          attribute's value can be found in the {@link #SeekBarDialogPreference} array.
+
+
+          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name nl.mprog.evilspacemonsterhangman:units
+        */
+        public static final int SeekBarDialogPreference_units = 3;
+    };
 }
