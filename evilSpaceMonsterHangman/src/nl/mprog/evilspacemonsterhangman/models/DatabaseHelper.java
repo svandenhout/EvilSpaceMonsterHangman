@@ -33,19 +33,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         fContext = context;
         dbPath = context.getFilesDir().getPath();
         dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases/";
-        Log.d(TAG, dbPath);
     }
     
     public void createDatabase() throws IOException {
     	boolean dbExist = checkDataBase();
+    	SQLiteDatabase db_Read = null;
     	
     	if(dbExist){
-    		// Log.d(TAG, "database exists");
+    		Log.d(TAG, "database exists");
     		// do nothing - database already exist
     	}else{
     		// By calling this method and empty database will be created into the default system path
             // of your application so we are gonna be able to overwrite that database with our database.
-	     	this.getReadableDatabase();
+    		db_Read = this.getReadableDatabase(); 
+    		db_Read.close();
 	
 	     	try {
 	     		Log.d(TAG, "copying database");

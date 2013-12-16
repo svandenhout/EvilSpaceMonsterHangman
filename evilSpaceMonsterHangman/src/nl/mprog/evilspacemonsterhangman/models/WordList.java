@@ -46,7 +46,7 @@ public class WordList {
         	
         	if(!_result.moveToNext()) {
         		break;
-        	}    
+        	}
         }
     }
 }

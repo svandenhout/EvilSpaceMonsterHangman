@@ -3,6 +3,7 @@ package nl.mprog.evilspacemonsterhangman;
 import nl.mprog.evilspacemonsterhangman.models.*;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,6 +11,7 @@ import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.util.Log;
 import android.view.Menu;
@@ -49,7 +51,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        setupSpaceMonster();
        	newHangman();
     }
 
@@ -58,6 +59,17 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK) {
+            changedPrefs = data.getBooleanExtra("changedPrefs", false);
+            
+            if(changedPrefs) {
+            	newHangman();
+            }
+        }
     }
     
     @Override
@@ -80,6 +92,45 @@ public class MainActivity extends Activity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    
+    
+    private void newHangman() {
+        preferences = getSharedPreferences("hangman_preferences", 0);
+        userName = preferences.getString("user_name_preference", "Player 1");
+        wordLength = preferences.getInt("word_length_preference", 4);
+        wrongGuesses = preferences.getInt("incorrect_guesses_preference", 10);
+        evilMode = preferences.getBoolean("game_mode_preference", false);
+        
+        if(evilMode) {
+        	hangman = new EvilHangman(wordLength, wrongGuesses);
+        }else {
+        	hangman = new Hangman(wordLength, wrongGuesses);
+        	
+        	
+        }
+        
+        doXmlLoad();
+    }
+
+    private void setupHangman() {
+        hangman.resetValues();
+    	hangman.setWordList(wordList);
+        
+    	// picks random word when null
+    	hangman.setCurrentWord(null);
+    	
+    	// set the textviews
+        currentWordStateView = 
+    		(TextView) findViewById(R.id.currentWordState);
+        usedLettersView = 
+    		(TextView) findViewById(R.id.usedLetters);
+        computerMonologueView = 
+    		(TextView) findViewById(R.id.computerDialogue);
+        
+        currentWordStateView.setText(hangman.getCurrentWordState());
+        usedLettersView.setText(hangman.getUsedLetters());
+        computerMonologueView.setText(R.string.cmonologue_start);
     }
     
     private void setupSpaceMonster() {
@@ -107,8 +158,14 @@ public class MainActivity extends Activity {
         	// set the listener for all the buttons
         	button.setOnClickListener(new View.OnClickListener() {
         	    public void onClick(View v) {
+        	    	
         	        Button button = (Button) v;
         	        int key = (int) button.getText().charAt(0);
+        	        Log.d("key", Integer.toString(key));
+        	        
+        	        userInputState = hangman.doUserInput(key); 
+        	        
+        	        playHangman();
         	    }
     	    });
         	
@@ -118,38 +175,71 @@ public class MainActivity extends Activity {
         }
     }
     
-    private void newHangman() {
-        preferences = getSharedPreferences("hangman_preferences", 0);
-        userName = preferences.getString("user_name_preference", "Player 1");
-        wordLength = preferences.getInt("word_length_preference", 4);
-        wrongGuesses = preferences.getInt("incorrect_guesses_preference", 10);
-        evilMode = preferences.getBoolean("game_mode_preference", false);
-        
-        if(evilMode) {
-        	hangman = new EvilHangman(wordLength, wrongGuesses);
-        }else {
-        	hangman = new Hangman(wordLength, wrongGuesses);
-        }
-        
-        doXmlLoad();
-    }
+    private void playHangman() {
+    	currentWordStateView.setText(hangman.getCurrentWordState());
 
-    private void setupHangman() {
-        hangman.resetValues();
-        if(!evilMode) {
-        	// set the textviews
-	        currentWordStateView = 
-        		(TextView) findViewById(R.id.currentWordState);
-	        usedLettersView = 
-        		(TextView) findViewById(R.id.usedLetters);
-	        computerMonologueView = 
-        		(TextView) findViewById(R.id.computerDialogue);
-	        
-	        currentWordStateView.setText(hangman.getCurrentWordState());
-	        usedLettersView.setText(hangman.getUsedLetters());
-	        computerMonologueView.setText(R.string.cmonologue_start);
-        }else {
-        	// evilmode
+        usedLettersView.setText(hangman.getUsedLetters());
+
+        switch(userInputState) {
+            case Hangman.ALREADY_USED:
+                computerMonologueView.setText(R.string.cmonologue_used);
+            break;
+            case Hangman.INVALID_INPUT:
+                computerMonologueView.setText(R.string.cmonologue_invalid);
+                break;
+            case Hangman.WRONG_GUESS:
+                computerMonologueView.setText(R.string.cmonologue_wrong);
+            break;
+            case Hangman.CORRECT_GUESS:
+                computerMonologueView.setText(R.string.cmonologue_correct);
+            break;
+            case Hangman.GAME_WON:
+                computerMonologueView.setText(R.string.cmonologue_won);
+                // hiScores.doNewScore(userName, hangman.getWrongGuessesDone());
+
+                AlertDialog.Builder youWinDialogBuilder = 
+            		new AlertDialog.Builder(this);
+
+                youWinDialogBuilder.setMessage("YOU WIN!");
+                youWinDialogBuilder.setPositiveButton(
+            		"PLAY AGAIN", 
+            		new DialogInterface.OnClickListener() {
+	                    public void onClick(DialogInterface dialog,int id) {
+	                        if(changedPrefs) {
+	                            newHangman();
+	                        }else {
+	                            setupHangman();
+	                        }
+	                    }
+            		});
+
+                AlertDialog youWinDialog = youWinDialogBuilder.create();
+
+                youWinDialog.show();
+            break;
+            
+            case Hangman.GAME_LOST:
+                computerMonologueView.setText(R.string.cmonologue_lost);
+                AlertDialog.Builder youLostDialogBuilder = 
+            		new AlertDialog.Builder(this);
+
+                youLostDialogBuilder.setMessage("YOU LOSE!");
+                youLostDialogBuilder.setPositiveButton(
+            		"PLAY AGAIN", new DialogInterface.OnClickListener() {
+	                    public void onClick(DialogInterface dialog,int id) {
+	                        if(changedPrefs) {
+	                            newHangman();
+	                        }else {
+	                            setupHangman();
+	                        }
+	                    }
+	                });
+
+                AlertDialog youLostDialog = youLostDialogBuilder.create();
+
+                youLostDialog.show();
+            break;
+
         }
     }
     
@@ -176,18 +266,20 @@ public class MainActivity extends Activity {
             @Override
             protected Void doInBackground(Void... arg0) {
             	
-            	// set sqlite database        
+            	// set up sqlite database
             	try {
         	        DatabaseHelper dbHelper = new DatabaseHelper(context);
         	        dbHelper.createDatabase();
-        	        db = dbHelper.getDatabase();
-        	        WordList wl = new WordList(db, wordLength);
-        	        wordList = wl.getWordList();
+        	        db = dbHelper.getDatabase();    
                 }catch(SQLiteException e) {
                 	e.printStackTrace();
                 }catch(IOException e) {
-                	e.printStackTrace();
-                }
+					e.printStackTrace();
+				}
+            	
+            	WordList wl = new WordList(db, 5);
+    	        wordList = wl.getWordList();
+            	
                 
                 return null;
             }
@@ -195,8 +287,8 @@ public class MainActivity extends Activity {
             @Override
             protected void onPostExecute(Void result) {
                 pd.dismiss();
-                setupSpaceMonster();
                 setupHangman();
+                setupSpaceMonster();
             }
 
 

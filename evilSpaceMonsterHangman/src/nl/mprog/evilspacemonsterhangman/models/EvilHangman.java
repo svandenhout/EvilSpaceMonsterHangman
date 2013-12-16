@@ -20,6 +20,7 @@ public class EvilHangman extends Hangman {
 	
     // i overwrite doUserInput because it's completely different
     // in evil mode. 
+    @Override
     public int doUserInput(int key) {
 		StringBuilder s = new StringBuilder();
 		// build a character from the ascii code

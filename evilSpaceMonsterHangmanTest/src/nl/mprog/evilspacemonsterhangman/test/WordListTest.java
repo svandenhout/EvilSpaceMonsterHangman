@@ -26,10 +26,10 @@ public class WordListTest extends InstrumentationTestCase {
     protected void setUp() throws Exception {
         final Context context = getInstrumentation().getTargetContext();
         try {
-	        DatabaseHelper _dbHelper = new DatabaseHelper(context);
-	        _dbHelper.createDatabase();
-	        SQLiteDatabase _db = _dbHelper.getDatabase();
-	        wl = new WordList(_db, 5);
+	        DatabaseHelper dbHelper = new DatabaseHelper(context);
+	        dbHelper.createDatabase();
+	        SQLiteDatabase db = dbHelper.getDatabase();
+	        wl = new WordList(db, 5);
         }catch(SQLiteException e) {
         	e.printStackTrace();
         }

@@ -3,6 +3,8 @@ package nl.mprog.evilspacemonsterhangman.models;
 import java.util.List;
 import java.util.Random;
 
+import android.util.Log;
+
 /**
  * The hangman class covers all of the aspects to actually play the game of hangman,
  * the constructor needs the values of the wordlength & the amount of turns the player has.
@@ -16,13 +18,13 @@ import java.util.Random;
 public class Hangman {
 	
     // all of the game states
-    public final int ALREADY_USED = 0;
-    public final int INVALID_INPUT = 1;
-    public final int WRONG_GUESS = 2;
-    public final int CORRECT_GUESS = 3;
-    public final int GAME_WON = 4;
-    public final int GAME_LOST = 5;
-    public final int INPUT_ERROR = 6;
+    public final static int ALREADY_USED = 0;
+    public final static int INVALID_INPUT = 1;
+    public final static int WRONG_GUESS = 2;
+    public final static int CORRECT_GUESS = 3;
+    public final static int GAME_WON = 4;
+    public final static int GAME_LOST = 5;
+    public final static int INPUT_ERROR = 6;
     
     protected static final int MIN_UNICODE_INDEX = 96;
     protected static final int MAX_UNICODE_INDEX = 123;
@@ -121,6 +123,9 @@ public class Hangman {
 	 * INPUT_ERROR = 6;
      */
     public int doUserInput(int key) {
+    	String str = Integer.toString(key);
+    	Log.d("key", str);
+    	
         StringBuilder s = new StringBuilder();
         char c = (char) key;
 
