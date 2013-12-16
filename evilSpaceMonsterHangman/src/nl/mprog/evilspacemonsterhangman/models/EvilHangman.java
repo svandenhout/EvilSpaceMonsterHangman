@@ -18,6 +18,7 @@ public class EvilHangman extends Hangman {
 		super.getCurrentWordState();
 	}
 	
+    // TODO: most input states are too complex to find right now
 	public void doEvilUserInput(int key) {
 		StringBuilder s = new StringBuilder();
 		

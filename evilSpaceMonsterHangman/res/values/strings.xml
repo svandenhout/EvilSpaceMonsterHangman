@@ -48,6 +48,7 @@
     <string name="used_letters" >used letters
     </string>
     <string name="computer_dialogue">computer dialogue</string>
+    <string name="button_text">a</string>
 
     <!-- game states -->
     <string name="game_won">game won

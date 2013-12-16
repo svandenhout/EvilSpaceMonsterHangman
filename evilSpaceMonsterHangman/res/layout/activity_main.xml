@@ -26,16 +26,6 @@
             android:layout_below="@+id/usedLetters"
             android:layout_marginTop="15dp"/>
 
-
-    <TextView
-            android:id="@+id/currentWord"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/current_word"
-            android:layout_below="@+id/currentWordState"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"/>
-
     <TextView
             android:id="@+id/currentWordState"
             android:layout_width="wrap_content"
@@ -44,4 +34,60 @@
             android:text="@string/current_word_state"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"/>
+
+    <Button
+        android:id="@+id/eye_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/eye_5"
+        android:layout_alignBottom="@+id/eye_5"
+        android:layout_alignParentRight="true"
+        android:onClick="eyePress"
+         />
+
+    <Button
+        android:id="@+id/eye_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/eye_6"
+        android:layout_alignLeft="@+id/computerDialogue"
+        android:layout_marginBottom="20dp"
+        android:onClick="eyePress" />
+
+    <Button
+        android:id="@+id/eye_6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/currentWordState"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="73dp"
+        android:onClick="eyePress" />
+
+    <Button
+        android:id="@+id/eye_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/eye_6"
+        android:onClick="eyePress" />
+
+    <Button
+        android:id="@+id/eye_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/eye_1"
+        android:layout_alignBottom="@+id/eye_1"
+        android:layout_toLeftOf="@+id/eye_2"
+        android:onClick="eyePress" />
+
+    <Button
+        android:id="@+id/eye_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/eye_4"
+        android:layout_alignBottom="@+id/eye_4"
+        android:layout_toRightOf="@+id/usedLetters"
+        android:onClick="eyePress" />
+
 </RelativeLayout>
