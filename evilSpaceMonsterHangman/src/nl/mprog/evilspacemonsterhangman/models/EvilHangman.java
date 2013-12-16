@@ -18,10 +18,10 @@ public class EvilHangman extends Hangman {
 		super.getCurrentWordState();
 	}
 	
-    // TODO: most input states are too complex to find right now
-	public void doEvilUserInput(int key) {
+    // i overwrite doUserInput because it's completely different
+    // in evil mode. 
+    public int doUserInput(int key) {
 		StringBuilder s = new StringBuilder();
-		
 		// build a character from the ascii code
         char c = (char) key;
         
@@ -32,7 +32,40 @@ public class EvilHangman extends Hangman {
             s.append(c);
             this.usedLetters = s.toString();
         }else {
-        	//return ALREADY_USED;
+        	return ALREADY_USED;
+        }
+        
+        if(key < MIN_UNICODE_INDEX || key > MAX_UNICODE_INDEX) {
+        	return INVALID_INPUT;
+        }
+        
+        // save the currentWordState before the evilBusiness happens
+        // to check if the user guessed correctly
+        String oldCws = currentWordState;
+        
+        // once there is no invalid input etc we increment a guess
+		wrongGuessesDone ++;
+        
+        // do the evil business here
+        evilBusiness(key);
+        
+        // i check for possible wins or losses here
+        
+        // if the "_" is not found the game has been won
+        // this will never happen but whatever
+        if(currentWordState.indexOf("_") == -1) {
+        	return GAME_WON;
+        }
+        
+        // game is lost when all of the guesses are done
+        if(this.wrongGuessesDone == this.wrongGuesses) 
+            return GAME_LOST;
+        
+        // check for a correct guess
+        if(oldCws.equals(currentWordState)) {
+        	return WRONG_GUESS;
+        }else {
+        	return CORRECT_GUESS;
         }
 	}
 	
@@ -47,13 +80,16 @@ public class EvilHangman extends Hangman {
 		// to make sure the equalstringcount has a value (java...)
 		equivString = this.buildEquivalenceString(super.wordList.get(0), key);
 		EqualStringCount topEsc = new EqualStringCount(equivString);
+		
         // for every word in the wordlist check for the letter
 	    for(String word : super.wordList) {
 	    	equivString = this.buildEquivalenceString(word, key);
 	    	if(equivList.size() > 0) {
+	    		
 	    		// loop through the equivList to check for equalStrings
 		    	// esc is short for EqualStringCount
 		    	for(EqualStringCount esc: equivList) {
+		    		
 		    		// checkWord increments when an equal word is found
 		    		if(esc.checkWord(equivString)) 
 		    			break;
@@ -61,6 +97,7 @@ public class EvilHangman extends Hangman {
 		    	}
 		    	equivList.add(new EqualStringCount(equivString));
 	    	} else {
+	    		
 	    		// when the equivList size is zero it has to start off by putting
 	    		// the first word into an EqualStringCount() object;
 	    		equivList.add(new EqualStringCount(equivString));
@@ -90,7 +127,7 @@ public class EvilHangman extends Hangman {
 	    			if(c == '_')
 	    				count++;
 	    		}
-	    			    		
+	    		
 	    		// change the currentwordstate to the "equivilanceString" with 
 	    		// the least letters
 	    		if(count > hiCount) 

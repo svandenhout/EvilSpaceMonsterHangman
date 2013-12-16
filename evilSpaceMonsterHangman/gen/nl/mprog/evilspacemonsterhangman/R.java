@@ -59,10 +59,10 @@ containing a value of this type.
         public static final int computerDialogue=0x7f090001;
         public static final int currentWordState=0x7f090002;
         public static final int eye_1=0x7f090007;
-        public static final int eye_2=0x7f090005;
+        public static final int eye_2=0x7f090004;
         public static final int eye_3=0x7f090006;
         public static final int eye_4=0x7f090008;
-        public static final int eye_5=0x7f090004;
+        public static final int eye_5=0x7f090005;
         public static final int eye_6=0x7f090003;
         public static final int hiScores=0x7f09000b;
         public static final int reset=0x7f09000d;

@@ -75,7 +75,7 @@ public class MainActivity extends Activity {
                 startActivityForResult(startPreferences, 0);
                 return true;
             case R.id.reset:
-                setHangman();
+                setupHangman();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -98,11 +98,20 @@ public class MainActivity extends Activity {
 
         // fill all of the eyes with the characters that
         // were randomised
-        // TODO: should fill the eyes
         int i = 0;
         for(char c: chosenLetters) {
         	String str = String.valueOf(c);
-        	eyes.get(i).setText(str);
+        	Button button = eyes.get(i);
+        	button.setText(str);
+        	
+        	// set the listener for all the buttons
+        	button.setOnClickListener(new View.OnClickListener() {
+        	    public void onClick(View v) {
+        	        Button button = (Button) v;
+        	        int key = (int) button.getText().charAt(0);
+        	    }
+    	    });
+        	
         	i++;
         	
 			Log.d("chosenLetters", str);
@@ -124,10 +133,8 @@ public class MainActivity extends Activity {
         
         doXmlLoad();
     }
-    
-    
 
-    private void setHangman() {
+    private void setupHangman() {
         hangman.resetValues();
         if(!evilMode) {
         	// set the textviews
@@ -188,35 +195,12 @@ public class MainActivity extends Activity {
             @Override
             protected void onPostExecute(Void result) {
                 pd.dismiss();
-                setHangman();
+                setupSpaceMonster();
+                setupHangman();
             }
 
 
         };
         asyncTask.execute((Void[])null);
-    }
-    
-    // THE EYES
-    void eyePress(View v) {
-    	switch(v.getId()) {
-    		case R.id.eye_1:
-    			Log.d("main", "eye 1 click");
-    			break;
-    		case R.id.eye_2: 
-    			Log.d("main", "eye 2 click");
-        		break;
-    		case R.id.eye_3: 
-    			Log.d("main", "eye 3 click");
-        		break;
-    		case R.id.eye_4: 
-    			Log.d("main", "eye 4 click");
-        		break;
-    		case R.id.eye_5: 
-    			Log.d("main", "eye 5 click");
-        		break;
-    		case R.id.eye_6: 
-    			Log.d("main", "eye 6 click");
-        		break;
-    	}
     }
 }
