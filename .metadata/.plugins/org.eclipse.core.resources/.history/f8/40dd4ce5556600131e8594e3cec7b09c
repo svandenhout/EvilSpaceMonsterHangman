@@ -85,7 +85,6 @@
         android:layout_height="50dp"
         android:layout_below="@+id/eye_3"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
         android:onClick="eyePress" />
 
 </RelativeLayout>

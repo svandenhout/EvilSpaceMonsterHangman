@@ -39,7 +39,7 @@
         android:id="@+id/eye_6"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentLeft="false"
         android:layout_marginTop="150dp"
         android:onClick="eyePress" />
 
@@ -48,7 +48,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="150dp"
-        android:layout_alignParentRight="true"
+        android:layout_marginRight="0dp"
         android:onClick="eyePress" />
 
     <Button
@@ -73,10 +73,9 @@
         android:id="@+id/eye_1"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_alignRight="@+id/eye_2"
-        android:layout_below="@+id/eye_2"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_alignTop="@+id/eye_5"
+        android:layout_marginTop="14dp"
+        android:layout_toLeftOf="@+id/eye_2"
         android:onClick="eyePress" />
 
     <Button
@@ -85,7 +84,6 @@
         android:layout_height="50dp"
         android:layout_below="@+id/eye_3"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
         android:onClick="eyePress" />
 
 </RelativeLayout>
