@@ -28,8 +28,15 @@ public class SpaceMonster {
 		return _availableLetters;
 	}
 	
+	// adds a random letter from a string to the _chosenletters[char]
+	public void addLetterFromString(String currentWord) {
+		int wordLength = currentWord.length();
+		char c = currentWord.charAt(generator.nextInt(wordLength));
+		addLetterAtRandom(c);
+	}
+	
 	// adds a char to a random spot of the _chosenletters[char]
-	public void addLetterAtRandom(char c) {
+	private void addLetterAtRandom(char c) {
 		_chosenLetters[generator.nextInt(monsterSize - 1)] = c;
 	}
 	

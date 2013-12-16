@@ -21,11 +21,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.xmlpull.v1.XmlPullParserException;
 
 public class MainActivity extends Activity {
     private SQLiteDatabase db;
@@ -41,7 +38,6 @@ public class MainActivity extends Activity {
 
     private SharedPreferences preferences;
     private boolean changedPrefs;
-    private String userName;
     private int wordLength;
     private int wrongGuesses;
     private boolean evilMode;
@@ -97,7 +93,6 @@ public class MainActivity extends Activity {
     
     private void newHangman() {
         preferences = getSharedPreferences("hangman_preferences", 0);
-        userName = preferences.getString("user_name_preference", "Player 1");
         wordLength = preferences.getInt("word_length_preference", 4);
         wrongGuesses = preferences.getInt("incorrect_guesses_preference", 10);
         evilMode = preferences.getBoolean("game_mode_preference", false);
@@ -111,6 +106,9 @@ public class MainActivity extends Activity {
         }
         
         doXmlLoad();
+        
+        
+        
     }
 
     private void setupHangman() {
@@ -133,10 +131,26 @@ public class MainActivity extends Activity {
         computerMonologueView.setText(R.string.cmonologue_start);
     }
     
+    // puts new letters in the monsters eyes
+    private void shakeMonster() {
+    	
+    	char[] chosenLetters = spaceMonster.randomChosenLetters();
+    	
+    	if(!evilMode) {
+    		spaceMonster.addLetterFromString(hangman.getCurrentWord());
+    	}
+    	
+    	int i = 0;
+        for(char c: chosenLetters) {
+        	String str = String.valueOf(c);
+        	Button button = eyes.get(i);
+        	button.setText(str);
+        	i++;
+        }
+    }
+    
     private void setupSpaceMonster() {
     	spaceMonster = new SpaceMonster();
-        
-        char[] chosenLetters = spaceMonster.randomChosenLetters();
         
         // build an eyes list
         eyes = new ArrayList<Button>();
@@ -146,21 +160,28 @@ public class MainActivity extends Activity {
         eyes.add((Button) findViewById(R.id.eye_4));
         eyes.add((Button) findViewById(R.id.eye_5));
         eyes.add((Button) findViewById(R.id.eye_6));
-
+        
+        shakeMonster();
+        
+        // set up shake button
+        Button button = (Button) findViewById(R.id.shake_button);
+        
+        button.setOnClickListener(new View.OnClickListener() {
+    	    public void onClick(View v) {
+    	    	shakeMonster();
+    	    }
+        });
+        
         // fill all of the eyes with the characters that
         // were randomised
-        int i = 0;
-        for(char c: chosenLetters) {
-        	String str = String.valueOf(c);
-        	Button button = eyes.get(i);
-        	button.setText(str);
+        for(Button eye: eyes) {
         	
         	// set the listener for all the buttons
-        	button.setOnClickListener(new View.OnClickListener() {
+        	eye.setOnClickListener(new View.OnClickListener() {
         	    public void onClick(View v) {
         	    	
-        	        Button button = (Button) v;
-        	        int key = (int) button.getText().charAt(0);
+        	        Button eye = (Button) v;
+        	        int key = (int) eye.getText().charAt(0);
         	        Log.d("key", Integer.toString(key));
         	        
         	        userInputState = hangman.doUserInput(key); 
@@ -168,10 +189,6 @@ public class MainActivity extends Activity {
         	        playHangman();
         	    }
     	    });
-        	
-        	i++;
-        	
-			Log.d("chosenLetters", str);
         }
     }
     
@@ -280,7 +297,6 @@ public class MainActivity extends Activity {
             	WordList wl = new WordList(db, 5);
     	        wordList = wl.getWordList();
             	
-                
                 return null;
             }
 
