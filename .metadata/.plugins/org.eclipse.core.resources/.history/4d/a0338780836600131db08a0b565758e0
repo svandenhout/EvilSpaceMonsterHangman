@@ -190,9 +190,7 @@ public class MainActivity extends Activity {
     	        		userInputState == Hangman.CORRECT_GUESS || 
         	        	userInputState == Hangman.WRONG_GUESS
     	        	) {
-        	        	// make sure a used letter won't come back
-        	        	// in the monster eyes
-        	        	spaceMonster.removeUsedLetter((char) key);
+        	        	spaceMonster.removeUsedLetter(char key)
         	        }
         	        
         	        playHangman();
