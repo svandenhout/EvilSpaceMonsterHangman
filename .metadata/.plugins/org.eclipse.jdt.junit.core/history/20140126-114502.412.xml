@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testrun name="WordListTest" project="evilSpaceMonsterHangmanTest" tests="1" started="1" failures="0" errors="1" ignored="0">
+  <testsuite name="Nexus_API_LVL_17 [emulator-5556]" time="0.878">
+    <testsuite name="nl.mprog.evilspacemonsterhangman.test.WordListTest" time="0.878">
+      <testcase name="testInstrumentation " classname="nl.mprog.evilspacemonsterhangman.test.WordListTest" time="0.878">
+        <error>java.lang.NullPointerException&#13;
+at nl.mprog.evilspacemonsterhangman.test.WordListTest.runTest(WordListTest.java:40)&#13;
+at android.test.AndroidTestRunner.runTest(AndroidTestRunner.java:190)&#13;
+at android.test.AndroidTestRunner.runTest(AndroidTestRunner.java:175)&#13;
+at android.test.InstrumentationTestRunner.onStart(InstrumentationTestRunner.java:555)&#13;
+at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:1661)&#13;
+
+</error>
+      </testcase>
+    </testsuite>
+  </testsuite>
+</testrun>

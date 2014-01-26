@@ -54,23 +54,25 @@ containing a value of this type.
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
+        public static final int spacemonster=0x7f020001;
     }
     public static final class id {
-        public static final int computerDialogue=0x7f090001;
-        public static final int currentWordState=0x7f090002;
-        public static final int eye_1=0x7f090007;
-        public static final int eye_2=0x7f090004;
-        public static final int eye_3=0x7f090006;
-        public static final int eye_4=0x7f090008;
-        public static final int eye_5=0x7f090005;
-        public static final int eye_6=0x7f090003;
-        public static final int hiScores=0x7f09000c;
-        public static final int reset=0x7f09000e;
-        public static final int seekbar=0x7f09000b;
-        public static final int settings=0x7f09000d;
-        public static final int shake_button=0x7f090009;
-        public static final int usedLetters=0x7f090000;
-        public static final int valueText=0x7f09000a;
+        public static final int computerDialogue=0x7f090002;
+        public static final int currentWordState=0x7f090003;
+        public static final int eye_1=0x7f090008;
+        public static final int eye_2=0x7f090005;
+        public static final int eye_3=0x7f090007;
+        public static final int eye_4=0x7f090009;
+        public static final int eye_5=0x7f090006;
+        public static final int eye_6=0x7f090004;
+        public static final int hiScores=0x7f09000d;
+        public static final int reset=0x7f09000f;
+        public static final int seekbar=0x7f09000c;
+        public static final int settings=0x7f09000e;
+        public static final int shake_button=0x7f09000a;
+        public static final int space_monster=0x7f090000;
+        public static final int usedLetters=0x7f090001;
+        public static final int valueText=0x7f09000b;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -82,28 +84,31 @@ containing a value of this type.
     public static final class string {
         public static final int app_name=0x7f060000;
         public static final int button_text=0x7f060014;
-        public static final int cmonologue_correct=0x7f06001c;
-        public static final int cmonologue_invalid=0x7f06001a;
-        public static final int cmonologue_lost=0x7f06001e;
+        public static final int cmonologue_correct=0x7f06001d;
+        public static final int cmonologue_invalid=0x7f06001b;
+        public static final int cmonologue_lost=0x7f06001f;
         /**  computer monologue 
          */
-        public static final int cmonologue_start=0x7f060018;
-        public static final int cmonologue_used=0x7f060019;
-        public static final int cmonologue_won=0x7f06001d;
-        public static final int cmonologue_wrong=0x7f06001b;
+        public static final int cmonologue_start=0x7f060019;
+        public static final int cmonologue_used=0x7f06001a;
+        public static final int cmonologue_won=0x7f06001e;
+        public static final int cmonologue_wrong=0x7f06001c;
         public static final int computer_dialogue=0x7f060013;
         /**  game ui 
          */
         public static final int current_word=0x7f060010;
         public static final int current_word_state=0x7f060011;
+        /**  ugh.... 
+         */
+        public static final int description_space_monster=0x7f060016;
         public static final int dialog_amount_of_turns=0x7f06000e;
         public static final int dialog_evil_mode=0x7f06000f;
         public static final int dialog_user_name=0x7f06000c;
         public static final int dialog_word_length=0x7f06000d;
-        public static final int game_lost=0x7f060017;
+        public static final int game_lost=0x7f060018;
         /**  game states 
          */
-        public static final int game_won=0x7f060016;
+        public static final int game_won=0x7f060017;
         /**  settings & preferences 
          */
         public static final int hi_scores=0x7f060001;

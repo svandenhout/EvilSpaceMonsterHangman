@@ -34,19 +34,25 @@ public class WordList {
         String _line;
         Cursor _result;
         
-        _result = db.query(DB_TABLE, DB_COLLUMN, null, null, null, null, null, null);
+        // how can this be....
+        String _selection = "LENGTH(words) = " + wordLength;
+        
+        _result = db.query(
+    		DB_TABLE,
+    		DB_COLLUMN,
+    		_selection,
+    		null,
+    		null,
+    		null,
+    		null,
+    		null
+		);
+        
         _result.moveToFirst();
         
-        while(true) {
+        while(_result.moveToNext()) {
         	_line = _result.getString(0);
-        	
-            if(_line.length() == wordLength) {
-                wordList.add(_line);
-            }
-        	
-        	if(!_result.moveToNext()) {
-        		break;
-        	}
+        	wordList.add(_line);
         }
     }
 }

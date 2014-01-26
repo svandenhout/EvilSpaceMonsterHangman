@@ -51,6 +51,10 @@
     <string name="button_text">~</string>
     <string name="shake_monster">Shake Monster</string>
     
+    <!-- ugh.... -->
+    <string name="description_space_monster">it\'s the space monster
+    </string>
+    
     <!-- game states -->
     <string name="game_won">game won
     </string>
