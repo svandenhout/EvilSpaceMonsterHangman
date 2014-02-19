@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testrun name="WordListTest" project="evilSpaceMonsterHangmanTest" tests="1" started="1" failures="0" errors="0" ignored="0">
-  <testsuite name="Nexus_API_LVL_17 [emulator-5556]" time="2.855">
-    <testsuite name="nl.mprog.evilspacemonsterhangman.test.WordListTest" time="2.855">
-      <testcase name="testInstrumentation " classname="nl.mprog.evilspacemonsterhangman.test.WordListTest" time="2.855"/>
-    </testsuite>
-  </testsuite>
-</testrun>

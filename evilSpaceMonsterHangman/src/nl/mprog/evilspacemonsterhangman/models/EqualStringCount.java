@@ -4,16 +4,14 @@ import java.util.Comparator;
 
 public class EqualStringCount implements Comparator<EqualStringCount>, Comparable<EqualStringCount> {
 	/*
-	 * simple class that counts equal strings
-	 * when another string is inserted 
-	 * the checkWord() method returns false so a new
-	 * object can be made
+	 * Counts equal instances of a string object
+	 * how to use: the constructor sets the word, use checkWord() to see if a 
+	 * word is equal. When false is returned a new instance can be made.
 	 */
 	private int counter;
 	private String currentWord;
 	
-	// i have no idea why i would need this for a comparator...
-	// it actually works....
+	// comparator won't work without this constructor
 	public EqualStringCount() {
 		
 	}
@@ -33,7 +31,8 @@ public class EqualStringCount implements Comparator<EqualStringCount>, Comparabl
 		return currentWord;
 	}
 	
-	// check if the word is equal to the currentWord
+	// check if the word is equal to the currentWord, an equal string 
+	// increments the count and returns true. Not equal will return false
 	public Boolean checkWord(String equivWord) {
 		if(equivWord.equals(currentWord)) {
 			increment();
@@ -49,13 +48,11 @@ public class EqualStringCount implements Comparator<EqualStringCount>, Comparabl
 
 	@Override
 	public int compareTo(EqualStringCount another) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int compare(EqualStringCount lhs, EqualStringCount rhs) {
-		// TODO Auto-generated method stub
 		return  rhs.count() - lhs.count();
 	}
 }

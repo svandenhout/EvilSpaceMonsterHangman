@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -18,11 +19,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 public class MainActivity extends Activity {
     private SQLiteDatabase db;
@@ -35,9 +49,12 @@ public class MainActivity extends Activity {
     private TextView computerMonologueView;
     private TextView currentWordStateView;
     private TextView usedLettersView;
-
+    private ImageView background;
+    AnimationDrawable frameAnimation;
+    
     private SharedPreferences preferences;
     private boolean changedPrefs;
+    private String userName;
     private int wordLength;
     private int wrongGuesses;
     private boolean evilMode;
@@ -90,9 +107,9 @@ public class MainActivity extends Activity {
         }
     }
     
-    
     private void newHangman() {
         preferences = getSharedPreferences("hangman_preferences", 0);
+        userName = preferences.getString("user_name", "player 1");
         wordLength = preferences.getInt("word_length_preference", 4);
         wrongGuesses = preferences.getInt("incorrect_guesses_preference", 10);
         evilMode = preferences.getBoolean("game_mode_preference", false);
@@ -101,14 +118,9 @@ public class MainActivity extends Activity {
         	hangman = new EvilHangman(wordLength, wrongGuesses);
         }else {
         	hangman = new Hangman(wordLength, wrongGuesses);
-        	
-        	
         }
         
         doXmlLoad();
-        
-        
-        
     }
 
     private void setupHangman() {
@@ -131,15 +143,25 @@ public class MainActivity extends Activity {
         computerMonologueView.setText(R.string.cmonologue_start);
     }
     
-    // puts new letters in the monsters eyes
-    private void shakeMonster() {
-    	
+    // shake listener....
+    public void shakeMonsterListener(View view) {
+    	shakeMonster();
+    }
+    
+    // refreshes the letters in the monsters eyes, and makes it shake 
+    // like an animal
+    private void shakeMonster() {    	
     	char[] chosenLetters = spaceMonster.randomChosenLetters();
     	
     	if(!evilMode) {
     		spaceMonster.addLetterFromString(hangman.getCurrentWord());
     	}
     	
+    	// Start the animation (looped playback by default).
+        frameAnimation.stop();
+        frameAnimation.start();
+    	
+        // small loop to to set the eye-text
     	int i = 0;
         for(char c: chosenLetters) {
         	String str = String.valueOf(c);
@@ -147,6 +169,55 @@ public class MainActivity extends Activity {
         	button.setText(str);
         	i++;
         }
+    }
+    
+    private void sendHiScore(String user, String score, String date) {
+    	try {
+	    	URL url = new URL("http://localhost:3000/upload");
+	    	HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+	    	conn.setConnectTimeout(15000);
+	    	conn.setRequestMethod("POST");
+	    	conn.setDoOutput(true);
+	
+	    	List<NameValuePair> params = new ArrayList<NameValuePair>();
+	    	params.add(new BasicNameValuePair("user", user));
+	    	params.add(new BasicNameValuePair("score", score));
+	    	params.add(new BasicNameValuePair("date", date));
+	    	
+	    	
+	    	OutputStream os = conn.getOutputStream();
+	    	BufferedWriter writer = new BufferedWriter(
+		        new OutputStreamWriter(os, "UTF-8"));
+	    	writer.write(getQuery(params));
+	    	writer.flush();
+	    	writer.close();
+	    	os.close();
+	
+	    	conn.connect();
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    // for making a string of url parameters
+    // source: http://stackoverflow.com/questions/9767952/how-to-add-parameters-to-httpurlconnection-using-post
+    private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException
+    {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        for (NameValuePair pair : params) {
+            if (first)
+                first = false;
+            else
+                result.append("&");
+
+            result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
+        }
+
+        return result.toString();
     }
     
     private void setupSpaceMonster() {
@@ -161,16 +232,12 @@ public class MainActivity extends Activity {
         eyes.add((Button) findViewById(R.id.eye_5));
         eyes.add((Button) findViewById(R.id.eye_6));
         
-        shakeMonster();
-        
         // set up shake button
-        Button button = (Button) findViewById(R.id.shake_button);
+        background = (ImageView)findViewById(R.id.space_monster);
+        frameAnimation = 
+            	(AnimationDrawable) background.getDrawable();
         
-        button.setOnClickListener(new View.OnClickListener() {
-    	    public void onClick(View v) {
-    	    	shakeMonster();
-    	    }
-        });
+        shakeMonster();
         
         // fill all of the eyes with the characters that
         // were randomised
@@ -221,7 +288,14 @@ public class MainActivity extends Activity {
             break;
             case Hangman.GAME_WON:
                 computerMonologueView.setText(R.string.cmonologue_won);
-                // hiScores.doNewScore(userName, hangman.getWrongGuessesDone());
+                
+                // the game is won, why did it brake (i think i actually know)
+                String score = Integer.toString(hangman.getWrongGuessesDone());
+                Date date = new Date();
+                Long timeStamp = date.getTime();
+                String uploadDate = String.valueOf(timeStamp);
+                
+                sendHiScore(userName, score, uploadDate);
 
                 AlertDialog.Builder youWinDialogBuilder = 
             		new AlertDialog.Builder(this);
@@ -315,8 +389,6 @@ public class MainActivity extends Activity {
                 setupHangman();
                 setupSpaceMonster();
             }
-
-
         };
         asyncTask.execute((Void[])null);
     }

@@ -19,7 +19,7 @@ public class EvilHangman extends Hangman {
 	}
 	
     // i overwrite doUserInput because it's completely different
-    // in evil mode. 
+    // in evil mode.
     @Override
     public int doUserInput(int key) {
 		StringBuilder s = new StringBuilder();
@@ -50,7 +50,7 @@ public class EvilHangman extends Hangman {
         // do the evil business here
         evilBusiness(key);
         
-        // i check for possible wins or losses here
+        // check for possible wins or losses here
         
         // if the "_" is not found the game has been won
         // this will never happen but whatever
@@ -71,14 +71,14 @@ public class EvilHangman extends Hangman {
 	}
 	
 	/*
-	 * evilBusiness makes sure that this.currentWordState becomes the
-	 * least usefull answer possible.
+	 * evilBusiness makes sure that this.currentWordState is impossible for
+	 * the user to guess
 	 */
 	public void evilBusiness(int key) {
 		List<EqualStringCount> equivList = new ArrayList<EqualStringCount>();
 		String equivString;
 		
-		// to make sure the equalstringcount has a value (java...)
+		// to make sure the equalstringcount has a value
 		equivString = this.buildEquivalenceString(super.wordList.get(0), key);
 		EqualStringCount topEsc = new EqualStringCount(equivString);
 		
@@ -94,13 +94,14 @@ public class EvilHangman extends Hangman {
 		    		// checkWord increments when an equal word is found
 		    		if(esc.checkWord(equivString)) 
 		    			break;
-		    		// when no equal word is found a new esc will be added to the arrayList
+			    		// when no equal word is found a new EqualStringCount 
+		    			// is added to the equivList
 		    	}
 		    	equivList.add(new EqualStringCount(equivString));
 	    	} else {
 	    		
-	    		// when the equivList size is zero it has to start off by putting
-	    		// the first word into an EqualStringCount() object;
+	    		// when the equivList size is zero it has to start off by 
+	    		// putting the first word into an EqualStringCount() object;
 	    		equivList.add(new EqualStringCount(equivString));
 	    	}
     	}
@@ -129,9 +130,9 @@ public class EvilHangman extends Hangman {
 	    				count++;
 	    		}
 	    		
-	    		// change the currentwordstate to the "equivilanceString" with 
+	    		// change the currentwordstate to the "equivalanceString" with 
 	    		// the least letters
-	    		if(count > hiCount) 
+	    		if(count > hiCount)
 	    			super.currentWordState = esc.getString();
 	    		
     			hiCount = count;

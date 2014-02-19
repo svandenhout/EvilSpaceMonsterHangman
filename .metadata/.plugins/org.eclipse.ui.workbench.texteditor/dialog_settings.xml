@@ -13,16 +13,16 @@
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="" key="selection"/>
+		<item value="localhost" key="selection"/>
 		<list key="findhistory">
-			<item value="setWordList"/>
-			<item value="currentWord"/>
-			<item value="db"/>
-			<item value="wordList"/>
-			<item value="wrongGuessesDone"/>
-			<item value="center"/>
-			<item value="wordlist"/>
-			<item value="#0x63"/>
+			<item value="localhost"/>
+			<item value="play"/>
+			<item value="preferences"/>
+			<item value="name"/>
+			<item value="pref"/>
+			<item value="settings"/>
+			<item value="userName"/>
+			<item value="getwrong"/>
 		</list>
 		<list key="replacehistory">
 		</list>

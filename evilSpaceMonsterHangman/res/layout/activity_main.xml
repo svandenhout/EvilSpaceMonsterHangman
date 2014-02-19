@@ -2,25 +2,26 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="#000000"
               android:paddingLeft="@dimen/activity_horizontal_margin"
               android:paddingRight="@dimen/activity_horizontal_margin"
               android:paddingTop="@dimen/activity_vertical_margin"
               android:paddingBottom="@dimen/activity_vertical_margin"
               tools:context=".MainActivity"
               android:orientation="vertical">
-    
     <ImageView 
         android:id="@+id/space_monster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/spacemonster"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:src="@drawable/spacemonster_animation"
         android:contentDescription="@string/description_space_monster"
         android:adjustViewBounds="true"/>
     
     <TextView
             android:id="@+id/usedLetters"
+            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/used_letters"
@@ -29,6 +30,7 @@
 
     <TextView
             android:id="@+id/computerDialogue"
+            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -38,6 +40,7 @@
 
     <TextView
             android:id="@+id/currentWordState"
+            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/computerDialogue"
@@ -108,6 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/space_monster"
         android:layout_centerHorizontal="true"
+        android:onClick="shakeMonsterListener"
         android:layout_marginTop="280dp"
         android:text="@string/shake_monster"/>
 
