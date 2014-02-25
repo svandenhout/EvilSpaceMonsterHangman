@@ -53,8 +53,7 @@ public class EvilHangman extends Hangman {
         // check for possible wins or losses here
         
         // if the "_" is not found the game has been won
-        // this will never happen but whatever
-        if(currentWordState.indexOf("_") == -1) {
+        if(currentWordState.indexOf('_') == -1) {
         	return GAME_WON;
         }
         

@@ -155,8 +155,8 @@ public class Hangman {
         	return INVALID_INPUT;
         }
         
-        // if i is still 0 that means it hasn't incremented inside the while loop
-        // that means a correct match has not been found 
+        // if i is still 0 that means it hasn't incremented inside the while 
+        // loop that means a correct match has not been found 
         if(i == 0) {
         	this.wrongGuessesDone++;
         	// when true the game is lost
@@ -168,11 +168,11 @@ public class Hangman {
         }
         
         if(i > 0) {
+        	this.currentWordState = new String(ca);
         	// when true the game is won
             if(this.currentWordState.equals(this.currentWord)) {
             	return GAME_WON;
             }else {
-            	this.currentWordState = new String(ca);
             	return CORRECT_GUESS;
             }
         }

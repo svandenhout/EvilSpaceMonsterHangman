@@ -1,0 +1,61 @@
+/*
+ * HiScoreAcivity
+ * retrieves the hiscores from the hiScoreServer & shows them on screen
+ */
+
+package nl.mprog.evilspacemonsterhangman;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import nl.mprog.evilspacemonsterhangman.models.HiScore;
+import android.app.Activity;
+import android.util.JsonReader;
+
+public class HiScoreActivity extends Activity {
+	
+	
+	public void onCreate() {
+		HttpURLConnection urlConnection;
+		List<HiScore> hiScoreList;
+		
+		try {
+			URL url = new URL("http://localhost/hiscores.json");
+			urlConnection = (HttpURLConnection) url.openConnection();
+		
+		    InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+		    hiScoreList = readJsonStream(in);
+		    
+		    for(HiScore hiScore: hiScoreList) {
+		    	print(hiScore.getUser())
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+		
+	public List readJsonStream(InputStream in) throws IOException {
+		JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+	    try {
+	    	return readHiScoreArray(reader);
+	    }finally {
+	    	reader.close();
+	    }
+	}
+	
+     public List readHiScoreArray(JsonReader reader) throws IOException {
+    	 List<HiScore> hiScoreList = new ArrayList<HiScore>();
+		 reader.beginArray();
+		 while (reader.hasNext()) {
+			 hiScoreList.add(new HiScore(reader));
+		 }
+		 reader.endArray();
+		 return hiScoreList;
+   }
+}

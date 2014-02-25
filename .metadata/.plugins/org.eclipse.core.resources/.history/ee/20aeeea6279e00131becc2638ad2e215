@@ -1,0 +1,45 @@
+/*
+ * The hiscore object stores the user, score & date of the
+ * hiscore. It can parse a json string with said keys in it.
+ */
+package nl.mprog.evilspacemonsterhangman.models;
+
+import java.io.IOException;
+import java.util.Date;
+
+import android.util.JsonReader;
+
+public class HiScore {
+	int score;
+	String user;
+	Date date;
+	
+	public HiScore(JsonReader reader) throws IOException {
+		parseHiScore(reader);
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	
+	public String getUser() {
+		return user;
+	}
+	
+	public Date getDate() {
+		return date;
+	}
+	
+	private void parseHiScore(JsonReader reader) throws IOException {
+		reader.beginObject();
+		while (reader.hasNext()) {
+			String name = reader.nextName();
+			if(name.equals("user")) {
+				this.user = reader.nextString();
+			}else if (name.equals("score")) {
+				this.score = reader.nextInt();
+			}if(name.equals("date"))
+				this.date = new Date(reader.nextLong());
+		}
+	}
+}

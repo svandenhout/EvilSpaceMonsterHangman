@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteException;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -22,21 +23,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
 public class MainActivity extends Activity {
     private SQLiteDatabase db;
@@ -63,6 +52,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        StrictMode.ThreadPolicy policy = 
+        		new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         
        	newHangman();
     }
@@ -92,8 +85,8 @@ public class MainActivity extends Activity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.hiScores:
-                // Intent startHiScore = new Intent(context, HiScoreActivity.class);
-                // startActivity(startHiScore);
+                 Intent startHiScore = new Intent(context, HiScoreActivity.class);
+                 startActivity(startHiScore);
                 return true;
             case R.id.settings:
                 Intent startPreferences = new Intent(context, PreferencesActivity.class);
@@ -171,58 +164,8 @@ public class MainActivity extends Activity {
         }
     }
     
-    private void sendHiScore(String user, String score, String date) {
-    	try {
-	    	URL url = new URL("http://localhost:3000/upload");
-	    	HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-	    	conn.setConnectTimeout(15000);
-	    	conn.setRequestMethod("POST");
-	    	conn.setDoOutput(true);
-	
-	    	List<NameValuePair> params = new ArrayList<NameValuePair>();
-	    	params.add(new BasicNameValuePair("user", user));
-	    	params.add(new BasicNameValuePair("score", score));
-	    	params.add(new BasicNameValuePair("date", date));
-	    	
-	    	
-	    	OutputStream os = conn.getOutputStream();
-	    	BufferedWriter writer = new BufferedWriter(
-		        new OutputStreamWriter(os, "UTF-8"));
-	    	writer.write(getQuery(params));
-	    	writer.flush();
-	    	writer.close();
-	    	os.close();
-	
-	    	conn.connect();
-    	}catch(Exception e) {
-    		e.printStackTrace();
-    	}
-    }
-    
-    // for making a string of url parameters
-    // source: http://stackoverflow.com/questions/9767952/how-to-add-parameters-to-httpurlconnection-using-post
-    private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException
-    {
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-
-        for (NameValuePair pair : params) {
-            if (first)
-                first = false;
-            else
-                result.append("&");
-
-            result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
-        }
-
-        return result.toString();
-    }
-    
     private void setupSpaceMonster() {
     	spaceMonster = new SpaceMonster();
-        
         // build an eyes list
         eyes = new ArrayList<Button>();
         eyes.add((Button) findViewById(R.id.eye_1));
@@ -288,14 +231,9 @@ public class MainActivity extends Activity {
             break;
             case Hangman.GAME_WON:
                 computerMonologueView.setText(R.string.cmonologue_won);
-                
-                // the game is won, why did it brake (i think i actually know)
                 String score = Integer.toString(hangman.getWrongGuessesDone());
-                Date date = new Date();
-                Long timeStamp = date.getTime();
-                String uploadDate = String.valueOf(timeStamp);
                 
-                sendHiScore(userName, score, uploadDate);
+                HiScores.sendHiScore(userName, score);
 
                 AlertDialog.Builder youWinDialogBuilder = 
             		new AlertDialog.Builder(this);

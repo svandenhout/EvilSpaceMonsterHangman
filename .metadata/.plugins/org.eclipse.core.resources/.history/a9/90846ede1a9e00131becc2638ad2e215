@@ -1,0 +1,9 @@
+package nl.mprog.evilspacemonsterhangman.models;
+
+public class HiScores {
+	public HiScores() {
+		// constructor
+	}
+	
+	
+}
