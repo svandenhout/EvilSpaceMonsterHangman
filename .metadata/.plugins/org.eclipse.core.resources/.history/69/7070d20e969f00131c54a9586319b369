@@ -100,12 +100,7 @@ public class MainActivity extends Activity {
         }
     }
     
-    // shake listener....
-	public void shakeMonsterListener(View view) {
-		shakeMonster();
-	}
-
-	private void newHangman() {
+    private void newHangman() {
         preferences = getSharedPreferences("hangman_preferences", 0);
         userName = preferences.getString("user_name", "player 1");
         wordLength = preferences.getInt("word_length_preference", 4);
@@ -188,7 +183,12 @@ public class MainActivity extends Activity {
 	    }
 	}
 
-	// refreshes the letters in the monsters eyes, and makes it shake 
+	// shake listener....
+    public void shakeMonsterListener(View view) {
+    	shakeMonster();
+    }
+    
+    // refreshes the letters in the monsters eyes, and makes it shake 
     // like an animal
     private void shakeMonster() {    	
     	char[] chosenLetters = spaceMonster.randomChosenLetters();

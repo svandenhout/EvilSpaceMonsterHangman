@@ -100,12 +100,7 @@ public class MainActivity extends Activity {
         }
     }
     
-    // shake listener....
-	public void shakeMonsterListener(View view) {
-		shakeMonster();
-	}
-
-	private void newHangman() {
+    private void newHangman() {
         preferences = getSharedPreferences("hangman_preferences", 0);
         userName = preferences.getString("user_name", "player 1");
         wordLength = preferences.getInt("word_length_preference", 4);
@@ -141,54 +136,12 @@ public class MainActivity extends Activity {
         computerMonologueView.setText(R.string.cmonologue_start);
     }
     
-    private void setupSpaceMonster() {
-		spaceMonster = new SpaceMonster();
-	    // build an eyes list
-	    eyes = new ArrayList<Button>();
-	    eyes.add((Button) findViewById(R.id.eye_1));
-	    eyes.add((Button) findViewById(R.id.eye_2));
-	    eyes.add((Button) findViewById(R.id.eye_3));
-	    eyes.add((Button) findViewById(R.id.eye_4));
-	    eyes.add((Button) findViewById(R.id.eye_5));
-	    eyes.add((Button) findViewById(R.id.eye_6));
-	    
-	    // set up shake button
-	    background = (ImageView)findViewById(R.id.space_monster);
-	    frameAnimation = 
-	        	(AnimationDrawable) background.getDrawable();
-	    
-	    shakeMonster();
-	    
-	    // fill all of the eyes with the characters that
-	    // were randomised
-	    for(Button eye: eyes) {
-	    	
-	    	// set the listener for all the buttons
-	    	eye.setOnClickListener(new View.OnClickListener() {
-	    	    public void onClick(View v) {
-	    	    	
-	    	        Button eye = (Button) v;
-	    	        int key = (int) eye.getText().charAt(0);
-	    	        Log.d("key", Integer.toString(key));
-	    	        
-	    	        userInputState = hangman.doUserInput(key); 
-	    	        
-	    	        if(
-		        		userInputState == Hangman.CORRECT_GUESS || 
-	    	        	userInputState == Hangman.WRONG_GUESS
-		        	) {
-	    	        	// make sure a used letter won't come back
-	    	        	// in the monster eyes
-	    	        	spaceMonster.removeUsedLetter((char) key);
-	    	        }
-	    	        
-	    	        playHangman();
-	    	    }
-		    });
-	    }
-	}
-
-	// refreshes the letters in the monsters eyes, and makes it shake 
+    // shake listener....
+    public void shakeMonsterListener(View view) {
+    	shakeMonster();
+    }
+    
+    // refreshes the letters in the monsters eyes, and makes it shake 
     // like an animal
     private void shakeMonster() {    	
     	char[] chosenLetters = spaceMonster.randomChosenLetters();
@@ -208,6 +161,53 @@ public class MainActivity extends Activity {
         	Button button = eyes.get(i);
         	button.setText(str);
         	i++;
+        }
+    }
+    
+    private void setupSpaceMonster() {
+    	spaceMonster = new SpaceMonster();
+        // build an eyes list
+        eyes = new ArrayList<Button>();
+        eyes.add((Button) findViewById(R.id.eye_1));
+        eyes.add((Button) findViewById(R.id.eye_2));
+        eyes.add((Button) findViewById(R.id.eye_3));
+        eyes.add((Button) findViewById(R.id.eye_4));
+        eyes.add((Button) findViewById(R.id.eye_5));
+        eyes.add((Button) findViewById(R.id.eye_6));
+        
+        // set up shake button
+        background = (ImageView)findViewById(R.id.space_monster);
+        frameAnimation = 
+            	(AnimationDrawable) background.getDrawable();
+        
+        shakeMonster();
+        
+        // fill all of the eyes with the characters that
+        // were randomised
+        for(Button eye: eyes) {
+        	
+        	// set the listener for all the buttons
+        	eye.setOnClickListener(new View.OnClickListener() {
+        	    public void onClick(View v) {
+        	    	
+        	        Button eye = (Button) v;
+        	        int key = (int) eye.getText().charAt(0);
+        	        Log.d("key", Integer.toString(key));
+        	        
+        	        userInputState = hangman.doUserInput(key); 
+        	        
+        	        if(
+    	        		userInputState == Hangman.CORRECT_GUESS || 
+        	        	userInputState == Hangman.WRONG_GUESS
+    	        	) {
+        	        	// make sure a used letter won't come back
+        	        	// in the monster eyes
+        	        	spaceMonster.removeUsedLetter((char) key);
+        	        }
+        	        
+        	        playHangman();
+        	    }
+    	    });
         }
     }
     
@@ -233,7 +233,7 @@ public class MainActivity extends Activity {
                 computerMonologueView.setText(R.string.cmonologue_won);
                 String score = Integer.toString(hangman.getWrongGuessesDone());
                 
-                HiScores.postHiScore(userName, score);
+                HiScores.sendHiScore(userName, score);
 
                 AlertDialog.Builder youWinDialogBuilder = 
             		new AlertDialog.Builder(this);

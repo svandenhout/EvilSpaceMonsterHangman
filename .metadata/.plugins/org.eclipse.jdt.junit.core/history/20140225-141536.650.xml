@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testrun name="HiScoreTest" project="evilSpaceMonsterHangmanTest" tests="1" started="1" failures="0" errors="0" ignored="0">
-  <testsuite name="Nexus_API_LVL_17 [emulator-5554]" time="0.37">
-    <testsuite name="nl.mprog.evilspacemonsterhangman.test.HiScoreTest" time="0.37">
-      <testcase name="testInstrumentation " classname="nl.mprog.evilspacemonsterhangman.test.HiScoreTest" time="0.37"/>
-    </testsuite>
-  </testsuite>
-</testrun>

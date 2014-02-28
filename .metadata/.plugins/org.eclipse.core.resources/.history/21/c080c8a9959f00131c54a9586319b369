@@ -28,8 +28,6 @@ public class HiScoreTest extends InstrumentationTestCase {
 
     protected void runTest() {
     	try {
-    		// 
-    		HiScores.postHiScore("test steven", "5");
 	    	assertEquals("Hello World", HiScores.getHelloWorld());
 	    	JSONObject oneObject = hiScoreList.getJSONObject(0);
 	    	assertEquals("wow such test", oneObject.getString("user"));

@@ -25,23 +25,6 @@ public class HiScores {
 		// constructor
 	}
 	
-	// for server testing
-	public static String getHelloWorld() {
-		String str = "GOODBYE WORLD!";
-		
-		try {
-			URL url = new URL("http://10.0.2.2:3000/");
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			InputStream in = new BufferedInputStream(conn.getInputStream());
-			str = convertStreamToString(in);
-			in.close();
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
-		
-		return str;
-	}
-
 	// retrieves a JSONArray with all the hiScores
 	public static JSONArray getHiScores() {
 		try{
@@ -60,8 +43,25 @@ public class HiScores {
 		}	
 	}
 	
+	// for server testing
+	public static String getHelloWorld() {
+		String str = "GOODBYE WORLD!";
+		
+		try {
+			URL url = new URL("http://10.0.2.2:3000/");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			InputStream in = new BufferedInputStream(conn.getInputStream());
+			str = convertStreamToString(in);
+			in.close();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		return str;
+	}
+	
 	// Posts the HiScore to the server
-	public static void postHiScore(String user, String score) {
+	public static void sendHiScore(String user, String score) {
     	try {
 	    	URL url = new URL("http://10.0.2.2:3000/upload");
 	    	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
