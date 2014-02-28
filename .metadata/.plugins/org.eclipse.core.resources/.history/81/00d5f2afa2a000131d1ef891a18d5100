@@ -1,0 +1,32 @@
+/*
+ * HiScoreAcivity
+ * retrieves the hiscores from the hiScoreServer & shows them on screen
+ */
+
+package nl.mprog.evilspacemonsterhangman;
+
+import android.app.Activity;
+import android.os.AsyncTask;
+
+public class HiScoreActivity extends Activity {
+	
+	public void onCreate() {
+		AsyncTask<Void, Void, Void> asyncTask =
+				new AsyncTask<Void, Void, Void>() {
+			
+			@Override void onPreExecute() {
+				
+			}
+			
+			@Override
+			protected Void doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			
+			
+		};
+		
+	}
+}

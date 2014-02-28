@@ -24,8 +24,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends Activity {
     private SQLiteDatabase db;
@@ -52,10 +57,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
-        StrictMode.ThreadPolicy policy = 
-        		new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
         
        	newHangman();
     }
@@ -85,11 +86,13 @@ public class MainActivity extends Activity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.hiScores:
-                 Intent startHiScore = new Intent(context, HiScoreActivity.class);
+                 Intent startHiScore = 
+                 		new Intent(context, HiScoreActivity.class);
                  startActivity(startHiScore);
                 return true;
             case R.id.settings:
-                Intent startPreferences = new Intent(context, PreferencesActivity.class);
+                Intent startPreferences = 
+                		new Intent(context, PreferencesActivity.class);
                 startActivityForResult(startPreferences, 0);
                 return true;
             case R.id.reset:
@@ -231,31 +234,57 @@ public class MainActivity extends Activity {
             break;
             case Hangman.GAME_WON:
                 computerMonologueView.setText(R.string.cmonologue_won);
-                String score = Integer.toString(hangman.getWrongGuessesDone());
                 
-                // HiScores.postHiScore(userName, score);
+                final Context context = this;
+                final String score = 
+                		Integer.toString(hangman.getWrongGuessesDone());
+                
+                // the asyncTask for posting a hiscore to the database
+                AsyncTask<Void, Void, Void> asyncTask = 
+                		new AsyncTask<Void, Void, Void>() {
 
-                AlertDialog.Builder youWinDialogBuilder = 
-            		new AlertDialog.Builder(this);
+                    @Override
+                    protected Void doInBackground(Void... arg0) {
+                    	try {
+            	    		// testing the postHiScore funcion
+                    		URL postURL = 
+                    				new URL("http://10.0.2.2:3000/upload");
+            	    		HiScores.postHiScore(postURL ,userName, score);
+            	    	}catch(MalformedURLException e) {
+            	    		e.printStackTrace();
+            	    	}
+                        return null;
+                    }
 
-                youWinDialogBuilder.setMessage("YOU WIN!");
-                youWinDialogBuilder.setPositiveButton(
-            		"PLAY AGAIN", 
-            		new DialogInterface.OnClickListener() {
-	                    public void onClick(DialogInterface dialog,int id) {
-	                        if(changedPrefs) {
-	                            newHangman();
-	                        }else {
-	                            setupHangman();
-	                        }
-	                    }
-            		});
+                    @Override
+                    protected void onPostExecute(Void result) {
+                    	
+                    	AlertDialog.Builder youWinDialogBuilder = 
+                        		new AlertDialog.Builder(context);
 
-                AlertDialog youWinDialog = youWinDialogBuilder.create();
+                        youWinDialogBuilder.setMessage("YOU WIN!");
+                        youWinDialogBuilder.setPositiveButton(
+                    		"PLAY AGAIN", 
+                    		new DialogInterface.OnClickListener() {
+        	                    public void onClick(DialogInterface dialog, 
+        	                    		int id) {
+        	                        if(changedPrefs) {
+        	                            newHangman();
+        	                        }else {
+        	                            setupHangman();
+        	                        }
+        	                    }
+                    		});
 
-                youWinDialog.show();
+                        AlertDialog youWinDialog = 
+                        		youWinDialogBuilder.create();
+
+                        youWinDialog.show();
+                    }
+                };
+                
+                asyncTask.execute((Void[])null); 
             break;
-            
             case Hangman.GAME_LOST:
                 computerMonologueView.setText(R.string.cmonologue_lost);
                 AlertDialog.Builder youLostDialogBuilder = 
@@ -277,13 +306,13 @@ public class MainActivity extends Activity {
 
                 youLostDialog.show();
             break;
-
         }
     }
     
     /*
-     * doXmlLoad shows progressdialog while the wordList is loaded in the background
-     * after the list is loaded = onPostExecute() it will do setupGame()
+     * doXmlLoad shows progressdialog while the wordList is loaded in the 
+     * background after the list is loaded = onPostExecute() it will 
+     * setupGame()
      */
     private void doXmlLoad() {
         final Context context = this;

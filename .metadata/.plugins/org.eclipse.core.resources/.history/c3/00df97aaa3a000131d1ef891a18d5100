@@ -1,0 +1,63 @@
+/*
+ * HiScoreAcivity
+ * retrieves the hiscores from the hiScoreServer & shows them on screen
+ */
+
+package nl.mprog.evilspacemonsterhangman;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import nl.mprog.evilspacemonsterhangman.models.HiScores;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.AsyncTask;
+
+public class HiScoreActivity extends Activity {
+	private Context context = this;
+	private URL getURL;
+	private JSONArray hiScoreList;
+	
+	public void onCreate() {
+		AsyncTask<Void, Void, Void> asyncTask =
+				new AsyncTask<Void, Void, Void>() {
+			
+			
+			ProgressDialog pd;
+
+            @Override
+            protected void onPreExecute() {
+                pd = new ProgressDialog(context);
+                pd.setTitle("Processing...");
+                pd.setMessage("Please wait.");
+                pd.setCancelable(false);
+                pd.setIndeterminate(true);
+                pd.show();
+                
+                try {
+                	getURL = new URL("http://10.0.2.2:3000/hiscores.json");
+                }catch(MalformedURLException e) {
+                	e.printStackTrace();
+                }
+            }
+			
+			@Override
+			protected Void doInBackground(Void... params) {
+				try {
+					hiScoreList = HiScores.getHiScores(getURL);
+				}catch(JSONException e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+			
+			
+			
+		};
+		
+	}
+}

@@ -1,0 +1,375 @@
+package nl.mprog.evilspacemonsterhangman;
+
+import nl.mprog.evilspacemonsterhangman.models.*;
+
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.graphics.drawable.AnimationDrawable;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends Activity {
+    private SQLiteDatabase db;
+    private Hangman hangman;
+    private SpaceMonster spaceMonster;
+    List<String> wordList;
+    List<Button> eyes;
+    private int userInputState;
+
+    private TextView computerMonologueView;
+    private TextView currentWordStateView;
+    private TextView usedLettersView;
+    private ImageView background;
+    AnimationDrawable frameAnimation;
+    
+    private SharedPreferences preferences;
+    private boolean changedPrefs;
+    private String userName;
+    private int wordLength;
+    private int wrongGuesses;
+    private boolean evilMode;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
+       	newHangman();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK) {
+            changedPrefs = data.getBooleanExtra("changedPrefs", false);
+            
+            if(changedPrefs) {
+            	newHangman();
+            }
+        }
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final Context context = this;
+
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.hiScores:
+                 Intent startHiScore = new Intent(context, HiScoreActivity.class);
+                 startActivity(startHiScore);
+                return true;
+            case R.id.settings:
+                Intent startPreferences = new Intent(context, PreferencesActivity.class);
+                startActivityForResult(startPreferences, 0);
+                return true;
+            case R.id.reset:
+                setupHangman();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    
+    // shake listener....
+	public void shakeMonsterListener(View view) {
+		shakeMonster();
+	}
+
+	private void newHangman() {
+        preferences = getSharedPreferences("hangman_preferences", 0);
+        userName = preferences.getString("user_name", "player 1");
+        wordLength = preferences.getInt("word_length_preference", 4);
+        wrongGuesses = preferences.getInt("incorrect_guesses_preference", 10);
+        evilMode = preferences.getBoolean("game_mode_preference", false);
+        
+        if(evilMode) {
+        	hangman = new EvilHangman(wordLength, wrongGuesses);
+        }else {
+        	hangman = new Hangman(wordLength, wrongGuesses);
+        }
+        
+        doXmlLoad();
+    }
+
+    private void setupHangman() {
+        hangman.resetValues();
+    	hangman.setWordList(wordList);
+        
+    	// picks random word when null
+    	hangman.setCurrentWord(null);
+    	
+    	// set the textviews
+        currentWordStateView = 
+    		(TextView) findViewById(R.id.currentWordState);
+        usedLettersView = 
+    		(TextView) findViewById(R.id.usedLetters);
+        computerMonologueView = 
+    		(TextView) findViewById(R.id.computerDialogue);
+        
+        currentWordStateView.setText(hangman.getCurrentWordState());
+        usedLettersView.setText(hangman.getUsedLetters());
+        computerMonologueView.setText(R.string.cmonologue_start);
+    }
+    
+    private void setupSpaceMonster() {
+		spaceMonster = new SpaceMonster();
+	    // build an eyes list
+	    eyes = new ArrayList<Button>();
+	    eyes.add((Button) findViewById(R.id.eye_1));
+	    eyes.add((Button) findViewById(R.id.eye_2));
+	    eyes.add((Button) findViewById(R.id.eye_3));
+	    eyes.add((Button) findViewById(R.id.eye_4));
+	    eyes.add((Button) findViewById(R.id.eye_5));
+	    eyes.add((Button) findViewById(R.id.eye_6));
+	    
+	    // set up shake button
+	    background = (ImageView)findViewById(R.id.space_monster);
+	    frameAnimation = 
+	        	(AnimationDrawable) background.getDrawable();
+	    
+	    shakeMonster();
+	    
+	    // fill all of the eyes with the characters that
+	    // were randomised
+	    for(Button eye: eyes) {
+	    	
+	    	// set the listener for all the buttons
+	    	eye.setOnClickListener(new View.OnClickListener() {
+	    	    public void onClick(View v) {
+	    	    	
+	    	        Button eye = (Button) v;
+	    	        int key = (int) eye.getText().charAt(0);
+	    	        Log.d("key", Integer.toString(key));
+	    	        
+	    	        userInputState = hangman.doUserInput(key); 
+	    	        
+	    	        if(
+		        		userInputState == Hangman.CORRECT_GUESS || 
+	    	        	userInputState == Hangman.WRONG_GUESS
+		        	) {
+	    	        	// make sure a used letter won't come back
+	    	        	// in the monster eyes
+	    	        	spaceMonster.removeUsedLetter((char) key);
+	    	        }
+	    	        
+	    	        playHangman();
+	    	    }
+		    });
+	    }
+	}
+
+	// refreshes the letters in the monsters eyes, and makes it shake 
+    // like an animal
+    private void shakeMonster() {    	
+    	char[] chosenLetters = spaceMonster.randomChosenLetters();
+    	
+    	if(!evilMode) {
+    		spaceMonster.addLetterFromString(hangman.getCurrentWord());
+    	}
+    	
+    	// Start the animation (looped playback by default).
+        frameAnimation.stop();
+        frameAnimation.start();
+    	
+        // small loop to to set the eye-text
+    	int i = 0;
+        for(char c: chosenLetters) {
+        	String str = String.valueOf(c);
+        	Button button = eyes.get(i);
+        	button.setText(str);
+        	i++;
+        }
+    }
+    
+    private void playHangman() {
+    	currentWordStateView.setText(hangman.getCurrentWordState());
+
+        usedLettersView.setText(hangman.getUsedLetters());
+
+        switch(userInputState) {
+            case Hangman.ALREADY_USED:
+                computerMonologueView.setText(R.string.cmonologue_used);
+            break;
+            case Hangman.INVALID_INPUT:
+                computerMonologueView.setText(R.string.cmonologue_invalid);
+                break;
+            case Hangman.WRONG_GUESS:
+                computerMonologueView.setText(R.string.cmonologue_wrong);
+            break;
+            case Hangman.CORRECT_GUESS:
+                computerMonologueView.setText(R.string.cmonologue_correct);
+            break;
+            case Hangman.GAME_WON:
+                computerMonologueView.setText(R.string.cmonologue_won);
+                String score = Integer.toString(hangman.getWrongGuessesDone());
+                
+                // HiScores.postHiScore(userName, score);
+                AsyncTask<Void, Void, Void> asyncTask = 
+                		new AsyncTask<Void, Void, Void>() {
+                	
+                    ProgressDialog pd;
+
+                    @Override
+                    protected void onPreExecute() {
+                        pd = new ProgressDialog(context);
+                        pd.setTitle("Processing...");
+                        pd.setMessage("Please wait.");
+                        pd.setCancelable(false);
+                        pd.setIndeterminate(true);
+                        pd.show();
+                    }
+
+                    @Override
+                    protected Void doInBackground(Void... arg0) {
+                    	
+                    	// set up sqlite database
+                    	try {
+                	        DatabaseHelper dbHelper = new DatabaseHelper(context);
+                	        dbHelper.createDatabase();
+                	        db = dbHelper.getDatabase();    
+                        }catch(SQLiteException e) {
+                        	e.printStackTrace();
+                        }catch(IOException e) {
+        					e.printStackTrace();
+        				}
+                    	
+                    	WordList wl = new WordList(db, 5);
+            	        wordList = wl.getWordList();
+                    	
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void result) {
+                    	
+                    	AlertDialog.Builder youWinDialogBuilder = 
+                        		new AlertDialog.Builder(this);
+
+                            youWinDialogBuilder.setMessage("YOU WIN!");
+                            youWinDialogBuilder.setPositiveButton(
+                        		"PLAY AGAIN", 
+                        		new DialogInterface.OnClickListener() {
+            	                    public void onClick(DialogInterface dialog, 
+            	                    		int id) {
+            	                        if(changedPrefs) {
+            	                            newHangman();
+            	                        }else {
+            	                            setupHangman();
+            	                        }
+            	                    }
+                        		});
+
+                            AlertDialog youWinDialog = 
+                            		youWinDialogBuilder.create();
+
+                            youWinDialog.show();
+                    }
+                };
+                asyncTask.execute((Void[])null);
+                
+                
+            break;
+            
+            case Hangman.GAME_LOST:
+                computerMonologueView.setText(R.string.cmonologue_lost);
+                AlertDialog.Builder youLostDialogBuilder = 
+            		new AlertDialog.Builder(this);
+
+                youLostDialogBuilder.setMessage("YOU LOSE!");
+                youLostDialogBuilder.setPositiveButton(
+            		"PLAY AGAIN", new DialogInterface.OnClickListener() {
+	                    public void onClick(DialogInterface dialog,int id) {
+	                        if(changedPrefs) {
+	                            newHangman();
+	                        }else {
+	                            setupHangman();
+	                        }
+	                    }
+	                });
+
+                AlertDialog youLostDialog = youLostDialogBuilder.create();
+
+                youLostDialog.show();
+            break;
+
+        }
+    }
+    
+    /*
+     * doXmlLoad shows progressdialog while the wordList is loaded in the background
+     * after the list is loaded = onPostExecute() it will do setupGame()
+     */
+    private void doXmlLoad() {
+        final Context context = this;
+
+        AsyncTask<Void, Void, Void> asyncTask = 
+        		new AsyncTask<Void, Void, Void>() {
+        	
+            ProgressDialog pd;
+
+            @Override
+            protected void onPreExecute() {
+                pd = new ProgressDialog(context);
+                pd.setTitle("Processing...");
+                pd.setMessage("Please wait.");
+                pd.setCancelable(false);
+                pd.setIndeterminate(true);
+                pd.show();
+            }
+
+            @Override
+            protected Void doInBackground(Void... arg0) {
+            	
+            	// set up sqlite database
+            	try {
+        	        DatabaseHelper dbHelper = new DatabaseHelper(context);
+        	        dbHelper.createDatabase();
+        	        db = dbHelper.getDatabase();    
+                }catch(SQLiteException e) {
+                	e.printStackTrace();
+                }catch(IOException e) {
+					e.printStackTrace();
+				}
+            	
+            	WordList wl = new WordList(db, 5);
+    	        wordList = wl.getWordList();
+            	
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                pd.dismiss();
+                setupHangman();
+                setupSpaceMonster();
+            }
+        };
+        asyncTask.execute((Void[])null);
+    }
+}

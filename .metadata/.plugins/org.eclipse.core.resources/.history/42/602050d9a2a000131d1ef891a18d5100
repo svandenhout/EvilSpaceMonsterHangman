@@ -1,0 +1,42 @@
+/*
+ * HiScoreAcivity
+ * retrieves the hiscores from the hiScoreServer & shows them on screen
+ */
+
+package nl.mprog.evilspacemonsterhangman;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
+
+public class HiScoreActivity extends Activity {
+	
+	public void onCreate() {
+		Context context = this;
+		AsyncTask<Void, Void, Void> asyncTask =
+				new AsyncTask<Void, Void, Void>() {
+			
+			ProgressDialog pd;
+
+            @Override
+            protected void onPreExecute() {
+                pd = new ProgressDialog(context);
+                pd.setTitle("Processing...");
+                pd.setMessage("Please wait.");
+                pd.setCancelable(false);
+                pd.setIndeterminate(true);
+                pd.show();
+            }
+			
+			@Override
+			protected Void doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			
+			
+		};
+		
+	}
+}
