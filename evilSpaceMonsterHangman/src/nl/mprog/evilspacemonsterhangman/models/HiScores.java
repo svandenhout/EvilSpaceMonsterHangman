@@ -5,9 +5,9 @@
 package nl.mprog.evilspacemonsterhangman.models;
 
 import java.io.BufferedInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -18,34 +18,13 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONException;
 
 public class HiScores {
-	
-	public HiScores() {
-		// constructor
-	}
-	
-	// for server testing
-	public static String getHelloWorld() {
-		String str = "GOODBYE WORLD!";
-		
-		try {
-			URL url = new URL("http://10.0.2.2:3000/");
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			InputStream in = new BufferedInputStream(conn.getInputStream());
-			str = convertStreamToString(in);
-			in.close();
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
-		
-		return str;
-	}
 
 	// retrieves a JSONArray with all the hiScores
-	public static JSONArray getHiScores() {
+	public static JSONArray getHiScores(URL url) {
 		try{
-			URL url = new URL("http://10.0.2.2:3000/hiscores.json");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setDoInput(true);
 			conn.setRequestMethod("GET");
@@ -54,32 +33,33 @@ public class HiScores {
 			// JSONArray object
 			JSONArray hiScores = new JSONArray(convertStreamToString(in));
 			return hiScores;
-		}catch(Exception e) {
+		}catch(IOException e) {
 			e.printStackTrace();
 			return null;
-		}	
+		}catch(JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	// Posts the HiScore to the server
-	public static void postHiScore(String user, String score) {
+	public static void postHiScore(URL url, String user, String score) {
     	try {
-	    	URL url = new URL("http://10.0.2.2:3000/upload");
 	    	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	    	conn.setDoOutput(true);
-	    	conn.setConnectTimeout(15000);
-	    	conn.setRequestMethod("POST");
+	    	conn.setChunkedStreamingMode(0);
 	
 	    	List<NameValuePair> params = new ArrayList<NameValuePair>();
 	    	params.add(new BasicNameValuePair("user", user));
 	    	params.add(new BasicNameValuePair("score", score));
 	    	
-	    	DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+	    	// normal os should be good for this little data
+	    	OutputStream os = conn.getOutputStream();
+	    	
 	    	// this should write it to the specified server
-	    	os.writeBytes(getQuery(params));
+	    	os.write(getQuery(params).getBytes());
 	    	os.flush();
 	    	os.close();
-	
-	    	conn.connect();
     	}catch(IOException e) {
     		e.printStackTrace();
     	}

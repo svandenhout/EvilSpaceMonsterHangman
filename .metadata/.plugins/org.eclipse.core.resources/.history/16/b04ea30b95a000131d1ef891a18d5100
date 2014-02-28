@@ -1,0 +1,92 @@
+package nl.mprog.evilspacemonsterhangman.test;
+
+import java.io.IOException;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.ProgressDialog;
+import android.database.sqlite.SQLiteException;
+import android.os.AsyncTask;
+import android.test.InstrumentationTestCase;
+import nl.mprog.evilspacemonsterhangman.models.*;
+
+/**
+ * Created by steven on 6/26/13.
+ */
+public class HiScoreTest extends InstrumentationTestCase {
+	JSONArray hiScoreList;
+
+	
+	/*
+	 * HiScore test, i just comment out the send & get to differentiate
+	 */
+    public HiScoreTest(String name) {
+        super();
+        setName(name);
+    }
+
+    protected void setUp() {
+    	hiScoreList = HiScores.getHiScores();
+    }
+
+    protected void runTest() {
+    	
+	    	try {
+	    		// testing the postHiScore funcion
+	    		HiScores.postHiScore("test steven", "5");
+		    	JSONObject oneObject = hiScoreList.getJSONObject(0);
+		    	assertEquals("wow such test", oneObject.getString("user"));
+	    	}catch(JSONException e) {
+	    		e.printStackTrace();
+	    	}
+    	
+
+    	AsyncTask<Void, Void, Void> asyncTask = 
+        		new AsyncTask<Void, Void, Void>() {
+        	
+            ProgressDialog pd;
+
+            @Override
+            protected void onPreExecute() {
+                pd = new ProgressDialog(context);
+                pd.setTitle("Processing...");
+                pd.setMessage("Please wait.");
+                pd.setCancelable(false);
+                pd.setIndeterminate(true);
+                pd.show();
+            }
+
+            @Override
+            protected Void doInBackground(Void... arg0) {
+            	
+            	// set up sqlite database
+            	try {
+        	        DatabaseHelper dbHelper = new DatabaseHelper(context);
+        	        dbHelper.createDatabase();
+        	        db = dbHelper.getDatabase();    
+                }catch(SQLiteException e) {
+                	e.printStackTrace();
+                }catch(IOException e) {
+					e.printStackTrace();
+				}
+            	
+            	WordList wl = new WordList(db, 5);
+    	        wordList = wl.getWordList();
+            	
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                pd.dismiss();
+                setupHangman();
+                setupSpaceMonster();
+            }
+    }
+
+    public void testInstrumentation() {
+
+    }
+}

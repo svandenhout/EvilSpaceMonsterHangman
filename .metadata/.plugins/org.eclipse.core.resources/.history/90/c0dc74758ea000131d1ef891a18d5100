@@ -1,0 +1,110 @@
+/*
+ * The HiScores singleton contains all of the logics to POST & GET HiScores from
+ * the HiScores server.
+ */
+package nl.mprog.evilspacemonsterhangman.models;
+
+import java.io.BufferedInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+
+import android.os.AsyncTask;
+
+public class HiScores extends AsyncTask<URL, Void, String> {
+	
+	public HiScores() {
+		getHiScores
+	}
+	
+	public HiScores(String user, int score) {
+		
+	}
+
+	// retrieves a JSONArray with all the hiScores
+	public static JSONArray getHiScores() {
+		try{
+			URL url = new URL("http://10.0.2.2:3000/hiscores.json");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoInput(true);
+			conn.setRequestMethod("GET");
+			InputStream in = new BufferedInputStream(conn.getInputStream());
+			
+			// JSONArray object
+			JSONArray hiScores = new JSONArray(convertStreamToString(in));
+			return hiScores;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}	
+	}
+	
+	// Posts the HiScore to the server
+	public static void postHiScore(String user, String score) {
+    	try {
+	    	URL url = new URL("http://10.0.2.2:3000/upload");
+	    	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	    	conn.setDoOutput(true);
+	    	conn.setConnectTimeout(15000);
+	    	conn.setRequestMethod("POST");
+	
+	    	List<NameValuePair> params = new ArrayList<NameValuePair>();
+	    	params.add(new BasicNameValuePair("user", user));
+	    	params.add(new BasicNameValuePair("score", score));
+	    	
+	    	DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+	    	// this should write it to the specified server
+	    	os.writeBytes(getQuery(params));
+	    	os.flush();
+	    	os.close();
+	
+	    	conn.connect();
+    	}catch(IOException e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    // for making a string of url parameters
+    // source: http://stackoverflow.com/questions/9767952/how-to-add-parameters-to-httpurlconnection-using-post
+    private static String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException
+    {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        for (NameValuePair pair : params) {
+            if (first)
+                first = false;
+            else
+                result.append("&");
+
+            result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
+        }
+
+        return result.toString();
+    }
+    
+    private static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
+
+	@Override
+	protected String doInBackground(URL... params) {
+		if(params[0].equals("http://10.0.2.2:3000/upload")) {
+			this.postHiScore(user, score);
+		}
+		return null;
+	}
+}

@@ -1,9 +1,16 @@
 package nl.mprog.evilspacemonsterhangman.test;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
+import android.database.sqlite.SQLiteException;
+import android.os.AsyncTask;
 import android.test.InstrumentationTestCase;
 import nl.mprog.evilspacemonsterhangman.models.*;
 
@@ -12,10 +19,12 @@ import nl.mprog.evilspacemonsterhangman.models.*;
  */
 public class HiScoreTest extends InstrumentationTestCase {
 	JSONArray hiScoreList;
+	URL postURL;
+	URL getURL;
 
 	
 	/*
-	 * HiScore test, i just comment out the send & get to differentiate
+	 * I need to check most of the test serverside
 	 */
     public HiScoreTest(String name) {
         super();
@@ -23,19 +32,37 @@ public class HiScoreTest extends InstrumentationTestCase {
     }
 
     protected void setUp() {
-    	hiScoreList = HiScores.getHiScores();
+    	try {
+	    	postURL = new URL("http://10.0.2.2:3000/upload");
+			getURL = new URL("http://10.0.2.2:3000/hiscores.json");
+    	}catch(MalformedURLException e) {
+    		e.printStackTrace();
+    	}
+		hiScoreList = HiScores.getHiScores(getURL);
     }
 
     protected void runTest() {
-    	try {
-    		// 
-    		HiScores.postHiScore("test steven", "5");
-	    	assertEquals("Hello World", HiScores.getHelloWorld());
-	    	JSONObject oneObject = hiScoreList.getJSONObject(0);
-	    	assertEquals("wow such test", oneObject.getString("user"));
-    	}catch(JSONException e) {
-    		e.printStackTrace();
-    	}
+    	
+    	// i guess asynctask is here to ruin my day....
+    	AsyncTask<Void, Void, Void> asyncTask = 
+        		new AsyncTask<Void, Void, Void>() {
+        	
+            @Override
+            protected Void doInBackground(Void... arg0) {
+            	try {
+    	    		// testing the postHiScore funcion
+            		
+    	    		HiScores.postHiScore(postURL ,"test steven", "5");
+    		    	JSONObject oneObject = hiScoreList.getJSONObject(0);
+    		    	assertEquals("wow such test", oneObject.getString("user"));
+    	    	}catch(JSONException e) {
+    	    		e.printStackTrace();
+    	    	}
+            	
+                return null;
+            }
+    	};
+    	asyncTask.execute((Void[])null);
     }
 
     public void testInstrumentation() {

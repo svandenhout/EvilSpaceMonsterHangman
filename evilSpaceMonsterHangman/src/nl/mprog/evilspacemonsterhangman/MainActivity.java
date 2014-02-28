@@ -233,7 +233,7 @@ public class MainActivity extends Activity {
                 computerMonologueView.setText(R.string.cmonologue_won);
                 String score = Integer.toString(hangman.getWrongGuessesDone());
                 
-                HiScores.postHiScore(userName, score);
+                // HiScores.postHiScore(userName, score);
 
                 AlertDialog.Builder youWinDialogBuilder = 
             		new AlertDialog.Builder(this);
@@ -288,7 +288,9 @@ public class MainActivity extends Activity {
     private void doXmlLoad() {
         final Context context = this;
 
-        AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+        AsyncTask<Void, Void, Void> asyncTask = 
+        		new AsyncTask<Void, Void, Void>() {
+        	
             ProgressDialog pd;
 
             @Override
